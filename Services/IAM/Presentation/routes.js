@@ -1,6 +1,7 @@
 import express from "express";
 import morgan from "morgan";
 import users from "./routes/user.js";
+import admins from "./routes/admin.js"
 import error from "../middlewares/error.js";
 import cors from "../middlewares/cors.js";
 import logger from "../utilities/loggers/generalLogger.js";
@@ -17,6 +18,7 @@ export default function(app) {
     app.use(cors);
 
     app.use("/user", users);
+    app.use("/admin", admins);
 
     app.use(error);
 }

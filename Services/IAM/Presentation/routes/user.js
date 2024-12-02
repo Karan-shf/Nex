@@ -1,11 +1,5 @@
 import { Router } from "express";
-// import { validateUser, User, createJwtToken } from "../../Domain/models/user.js";
-// import _ from "lodash";
-// import bcrypt from "bcrypt";
-// import Joi from "joi";
-import auth from "../../middlewares/auth.js";
-// import { userCreate, userRead } from "../../Infrastructure/user.js";
-// import multer from "mu"
+import {Auth} from "../../middlewares/auth.js";
 import { userRegister, userLogin, me, checkEmail, checkUsername, sendVerificationEmail } from "../../Application/user.js";
 
 const router = Router();
@@ -18,7 +12,7 @@ router.post("/check/email", checkEmail);
 
 router.post("/check/username", checkUsername);
 
-router.get("/me",auth, me);
+router.get("/me",Auth, me);
 
 router.post("/otp/sendEmail", sendVerificationEmail);
 

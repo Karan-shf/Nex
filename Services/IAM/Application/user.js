@@ -1,10 +1,7 @@
-// import { createJwtToken } from "../Domain/models/user.js";
 import createJwtToken from "./token.js";
 import { userCreate, userRead } from "../Infrastructure/user.js";
-// import auth from "../middlewares/auth.js";
 import _ from "lodash";
 import bcrypt from "bcrypt";
-// import Joi from "joi";
 import registerValidate from "../Contracts/register.js";
 import loginValidate from "../Contracts/login.js";
 import otpSendEmailValidate from "../Contracts/otpSendEmail.js";
@@ -13,7 +10,7 @@ import crypto from "crypto";
 import sendMail from "./nodeMailer.js";
 import { otpCreate, otpDelete, otpRead } from "../Infrastructure/otp.js";
 import logger from "../utilities/loggers/generalLogger.js";
-// import crypto
+
 
 export async function userRegister(req,res) {
 
@@ -51,7 +48,7 @@ export async function userRegister(req,res) {
 
     user = await userCreate(req.body);
     
-    const token = createJwtToken(user.id);
+    const token = createJwtToken(user.id, false);
 
     return res.header("x-auth-token", token).json({"user": _.omit(user.toJSON(), ["password"])});
 }
@@ -68,7 +65,7 @@ export async function userLogin(req,res) {
     const validPassword = await bcrypt.compare(req.body.password, user.password);
     if (!validPassword) return res.status(400).json({"error": "invalid email or password"});
     
-    const token = createJwtToken(user.id);
+    const token = createJwtToken(user.id, false);
     
     res.header("x-auth-token", token).json({"user": _.omit(user.toJSON(), ["password"])});
 }
