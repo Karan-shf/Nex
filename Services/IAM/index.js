@@ -1,7 +1,7 @@
 import "express-async-errors";
 import express from "express";
 import { db } from "./DB/db.js";
-import { port } from "./utilities/config/config.js";
+import { port } from "./utilities/configs/config.js";
 import routes from "./Presentation/routes.js";
 import logger from "./utilities/loggers/generalLogger.js";
 

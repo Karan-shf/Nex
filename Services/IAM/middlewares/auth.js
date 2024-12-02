@@ -1,4 +1,4 @@
-import { jwtSecret } from "../utilities/config/config.js";
+import { jwtSecret } from "../utilities/configs/config.js";
 // import { User } from "../Domain/models/user.js";
 import jwt from "jsonwebtoken";
 import { userReadByID } from "../Infrastructure/user.js";
