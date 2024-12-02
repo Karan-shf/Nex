@@ -5,7 +5,7 @@ function useUserCheckToken() {
     return useQuery({
         queryKey: ['user'],
         queryFn: async () => {
-            const result = await fetch(APILink + "IAM/me", {
+            const result = await fetch(APILink + "IAM/user/me", {
                 headers: {
                     'x-auth-token': `Bearer ${localStorage.getItem("x-auth-token")}`
                 }
