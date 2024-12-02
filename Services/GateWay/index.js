@@ -13,6 +13,8 @@ app.use(cors({
     exposedHeaders: ['x-auth-token'], 
     credentials: true, 
 }));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true })); 
 
 app.use("/IAM", createProxyMiddleware(
     {target: "http://localhost:8000", changeOrigin:true }
