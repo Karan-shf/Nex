@@ -1,5 +1,5 @@
 import { Sequelize } from 'sequelize';
-import { dbName, dbHost, dbUser, dbPassword, dbDialect } from '../utilities/config/config.js';
+import { dbName, dbHost, dbUser, dbPassword, dbDialect } from '../utilities/configs/config.js';
 import logger from '../utilities/loggers/generalLogger.js';
 import dbLogger from '../utilities/loggers/dbLogger.js';
 

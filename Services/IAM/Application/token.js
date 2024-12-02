@@ -1,4 +1,4 @@
-import { jwtSecret } from "../utilities/config/config.js";
+import { jwtSecret } from "../utilities/configs/config.js";
 import jwt from "jsonwebtoken";
 
 export default function(id) {
