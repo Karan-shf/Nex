@@ -10,7 +10,7 @@ const ChooseUsername = () => {
   async function CheckUsername(username:string){
         setUserObj({...userObj , username:username})
         try {
-            const res = await fetch(APILink+"IAM/check/username", {
+            const res = await fetch(APILink+"IAM/user/check/username", {
               method: "POST",
               headers: {
                 "Content-Type": "application/json", 

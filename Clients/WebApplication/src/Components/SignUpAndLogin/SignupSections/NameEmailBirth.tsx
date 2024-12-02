@@ -13,7 +13,7 @@ const NameEmailBirth = () => {
     async function HandleNextStage(){
         if (userObj?.name && userObj?.email && userObj?.birthDate){
             try {
-                const res = await fetch(APILink+"IAM/check/email", {
+                const res = await fetch(APILink+"IAM/user/check/email", {
                   method: "POST",
                   headers: {
                     "Content-Type": "application/json", 

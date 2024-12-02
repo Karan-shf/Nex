@@ -10,7 +10,7 @@ const VerifyEmail = () => {
 
   async function SendEmail() {
     try {
-      const res = await fetch(APILink+"IAM/otp/sendEmail", {
+      const res = await fetch(APILink+"IAM/user/otp/sendEmail", {
         method: "POST",
         headers: {
           "Content-Type": "application/json", 
@@ -51,7 +51,7 @@ const VerifyEmail = () => {
 
   async function HandleNextStage(){
     try {
-      const res = await fetch(APILink+"IAM/register", {
+      const res = await fetch(APILink+"IAM/user/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json", 
