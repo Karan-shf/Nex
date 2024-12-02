@@ -7,14 +7,14 @@ function useUserCheckToken() {
         queryFn: async () => {
             const result = await fetch(APILink + "IAM/user/me", {
                 headers: {
-                    'x-auth-token': `Bearer ${localStorage.getItem("x-auth-token")}`
+                    'x-auth-token': `${localStorage.getItem("x-auth-token")}`
                 }
             });
             const jsonResult = await result.json();
             console.log("teees")
             console.log(jsonResult)
             if (result.ok) {
-                return jsonResult as User
+                return jsonResult.user as User
             } else {
                 throw new Error(jsonResult.error);
             }

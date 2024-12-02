@@ -2,11 +2,13 @@ import { useEffect, useState } from "react";
 import { useSignupContext } from "../../../contexts/SignupContext";
 import { APILink } from "../../../consts/consts";
 import { useNavigate } from "react-router-dom";
+import { useQueryClient } from "@tanstack/react-query";
 
 const VerifyEmail = () => {
   const { userObj, setUserObj, setStage } = useSignupContext();
   const [error , setError] = useState('')
   const navigate = useNavigate()
+  let queryClient = useQueryClient();
 
   async function SendEmail() {
     try {
@@ -32,8 +34,7 @@ const VerifyEmail = () => {
         // Handle success
       //   setError('')
         console.log("Request successful:", result);
-        const token = res.headers.get("x-auth-token")
-        localStorage.setItem("x-auth-token" , token ?? '')
+
       } else {
         // Handle failure
         console.log("Request failed:", result);
@@ -72,6 +73,10 @@ const VerifyEmail = () => {
         // Handle success
         // setError('')
         console.log("Request successful:", result);
+        const token = res.headers.get("x-auth-token")
+        console.log('llop',res.headers)
+        localStorage.setItem("x-auth-token" , token ?? '')
+        queryClient.invalidateQueries({queryKey:["user"]});
         navigate("/userProfile")
 
       } else {

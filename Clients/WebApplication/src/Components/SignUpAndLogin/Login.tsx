@@ -88,7 +88,7 @@ const Login = () => {
                             />
 
                             <input
-                            type="text"
+                            type="password"
                             placeholder="Password"
                             className="bg-base-100 border-2 rounded-lg border-accent p-3 placeholder-accent w-full"
                             ref={passwordRef}

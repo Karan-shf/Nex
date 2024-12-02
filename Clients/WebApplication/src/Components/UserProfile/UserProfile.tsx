@@ -11,7 +11,7 @@ const UserProfile = () => {
             <p>{user?.id}</p>
             <p>{user?.email}</p>
 
-            <p>{user?.birthDate.getDate()}</p>
+            <p>{user?.birthDate?.toString()}</p>
 
             <p>{user?.name}</p>
 

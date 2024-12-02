@@ -10,19 +10,22 @@ const OuterLayout = () => {
   let [loading, setLoading] = useState<any>(true);
 
   let {data: serverUser,error,isLoading} = useUserCheckToken();
-
+ 
   useEffect(() => {
     const theme = localStorage.getItem("theme");
     if(theme){
       document.documentElement.setAttribute('data-theme', theme);
 
     }
-    
+    // console.log(serverUser.u)
     setLoading(isLoading);
     if(error){
         setUser(null);
+        console.log("err")
     }else if (serverUser?.email && !_.isEqual(serverUser,user)){
         setUser(serverUser);
+        console.log("nrr")
+
     }
 },[serverUser,isLoading]);
 
