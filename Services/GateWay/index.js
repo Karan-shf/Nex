@@ -9,12 +9,10 @@ app.use(morgan("dev"));
 app.use(cors({
     origin: 'http://localhost:5173',
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], 
-    allowedHeaders: ['Content-Type', 'Authorization'], 
+    allowedHeaders: ['Content-Type', 'Authorization', 'x-auth-token'], 
     exposedHeaders: ['x-auth-token'], 
     credentials: true, 
 }));
-app.use(express.json());
-app.use(express.urlencoded({ extended: true })); 
 
 app.use("/IAM", createProxyMiddleware(
     {target: "http://localhost:8000", changeOrigin:true }
