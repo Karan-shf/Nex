@@ -35,7 +35,8 @@ const Signup = () => {
         <div className="modal-box md:w-5/12 sm:w-8/12 w-full max-w-5xl " style={{height:'600px'}}>
           <form method="dialog">
               {/* if there is a button in form, it will close the modal */}
-              <button className="btn btn-3xl text-2xl btn-circle btn-ghost absolute right-2 top-2">
+              <button onClick={()=>{setStage("name email birth");setUserObj({email: "",password: "",username: "",name: "",birthDate: new Date(), 
+    })}} className="btn btn-3xl text-2xl btn-circle btn-ghost absolute right-2 top-2">
               ✕
               </button>
           </form>
