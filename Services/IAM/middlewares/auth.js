@@ -1,10 +1,10 @@
-import { jwtSecret } from "../utilities/config/config.js";
+import { jwtSecret } from "../utilities/configs/config.js";
 // import { User } from "../Domain/models/user.js";
 import jwt from "jsonwebtoken";
 import { userReadByID } from "../Infrastructure/user.js";
 
 
-export default async function(req, res, next) {
+export default async function (req, res, next) {
     const token = req.header("x-auth-token");
     if (!token) return res.status(401).send("no token provided");
 
