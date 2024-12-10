@@ -25,19 +25,19 @@ export async function userRegister(req,res) {
     user = user[0];
     if (user) return res.status(400).json({"error": "the given username is already taken"});
 
-    let otp = await otpRead({email: req.body.email});
-    if (!otp) return res.status(404).json({"message":"no otp found"});
+    let otp = await otpRead( req.body.email);
+    if (!otp) return res.status(404).json({"error":"no otp found"});
 
-    otp = otp.toJSON();
+    // otp = otp.toJSON();
 
-    if (otp.expireTime.getTime() < Date.now()) {
-        await otpDelete({id: otp.id});
-        return res.status(400).json({"message":"otp expire time has passed"});
-    }
+    // if (otp.expireTime.getTime() < Date.now()) {
+    //     await otpDelete({id: otp.id});
+    //     return res.status(400).json({"message":"otp expire time has passed"});
+    // }
 
-    if (otp.verificationCode != req.body.verificationCode) return res.status(400).json({"message":"incorrect otp code"});
+    if (otp != req.body.verificationCode) return res.status(400).json({"error":"incorrect otp code"});
 
-    await otpDelete({id: otp.id});
+    await otpDelete(req.body.email);
 
     logger.info(`${req.body.email} verified`);
 
@@ -123,10 +123,7 @@ export async function sendVerificationEmail(req,res) {
 
     logger.info(`confirmation email sent to ${req.body.email}`,emailSent);
 
-    const otp = await otpCreate({
-        email: req.body.email, 
-        verificationCode: confirmationCode,
-    });
+    const otp = await otpCreate(req.body.email, confirmationCode);
 
     return res.json({"otp": otp});
 }

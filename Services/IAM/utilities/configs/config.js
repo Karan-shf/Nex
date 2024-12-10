@@ -9,3 +9,5 @@ export const dbDialect = config.get("db.postgres.dialect");
 export const jwtSecret = config.get("jwtSecret");
 export const emailName = config.get("nodeMailer.emailName");
 export const emailAppPassword = config.get("nodeMailer.emailAppPassword");
+export const redisHost = config.get("db.redis.host");
+export const redisPort = config.get("db.redis.port");
