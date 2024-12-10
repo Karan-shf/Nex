@@ -23,7 +23,7 @@ export async function userRegister(req,res) {
 
     user = await userRead({ username: req.body.username });
     user = user[0];
-    if (user) return res.status(400).jaon({"error": "the given username is already taken"});
+    if (user) return res.status(400).json({"error": "the given username is already taken"});
 
     let otp = await otpRead({email: req.body.email});
     if (!otp) return res.status(404).json({"message":"no otp found"});
@@ -67,7 +67,7 @@ export async function userLogin(req,res) {
     
     const token = createJwtToken(user.id, false);
     
-    res.header("x-auth-token", token).json({"user": _.omit(user.toJSON(), ["password"])});
+    res.status(200).header("x-auth-token", token).json({"user": _.omit(user.toJSON(), ["password"])});
 }
 
 export async function me(req,res) {

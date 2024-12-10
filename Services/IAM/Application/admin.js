@@ -1,5 +1,5 @@
 import loginValidate from "../Contracts/login.js";
-import { adminRead } from "../Infrastructure/admin.js";
+import { adminRead, adminCreate } from "../Infrastructure/admin.js";
 import _ from "lodash";
 import bcrypt from "bcrypt";
 import createJwtToken from "./token.js";
