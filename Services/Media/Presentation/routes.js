@@ -7,6 +7,7 @@ import swaggerDocument from "../Middlewares/swagger_output.json" with { type: 'j
 import swaggerUi from "swagger-ui-express";
 import logger from "../utilities/loggers/generalLogger.js";
 import { upload, allFiles, getFile, deleteFile } from "../Application/media.js";
+import { auth } from "../Middlewares/auth.js";
 
 
 export default function(app) {
@@ -22,13 +23,13 @@ export default function(app) {
     app.use(express.urlencoded({ extended: true })); 
     app.use(cors);
 
-    app.post("/upload", uploader.single("file"), upload);
+    app.post("/upload", auth, uploader.single("file"), upload);
 
-    app.get("/", allFiles);
+    app.get("/", auth, allFiles);
 
-    app.get("/file/:filename", getFile);
+    app.get("/file/:filename", auth, getFile);
 
-    app.delete("/file/:id", deleteFile);
+    app.delete("/file/:id", auth, deleteFile);
 
     app.use(error);
 }
