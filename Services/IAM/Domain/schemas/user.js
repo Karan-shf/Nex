@@ -23,6 +23,11 @@ export default {
         allowNull: true,
         unique: true
     },
+    backGroundPic: {
+        type: DataTypes.STRING,
+        allowNull: true,
+        unique: true
+    },
     username: {
         type: DataTypes.STRING(20),
         allowNull: false,
