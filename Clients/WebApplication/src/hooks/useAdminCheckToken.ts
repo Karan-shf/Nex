@@ -1,0 +1,27 @@
+import { useQuery } from "@tanstack/react-query";
+import { APILink } from "../consts/consts";
+import { User } from "../Interfaces/Interfaces";
+function useAdminCheckToken() {
+    return useQuery({
+        queryKey: ['admin'],
+        queryFn: async () => {
+            const result = await fetch(APILink + "IAM/admin/me", {
+                headers: {
+                    'x-auth-token': `${localStorage.getItem("x-auth-token")}`
+                }
+            });
+            const jsonResult = await result.json();
+            console.log("teees")
+            console.log(jsonResult)
+            if (result.ok) {
+                return jsonResult.user as User
+            } else {
+                throw new Error(jsonResult.error);
+            }
+        },
+        staleTime: 6 * 60 * 60 * 1000,
+        //
+        retry: 1
+    })
+}
+export default useAdminCheckToken;
