@@ -8,14 +8,14 @@ const app = express();
 app.use(morgan("dev"));
 app.use(cors({
     origin: 'http://localhost:5173',
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], 
-    allowedHeaders: ['Content-Type', 'Authorization', 'x-auth-token'], 
-    exposedHeaders: ['x-auth-token'], 
-    credentials: true, 
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'x-auth-token'],
+    exposedHeaders: ['x-auth-token'],
+    credentials: true,
 }));
 
 app.use("/IAM", createProxyMiddleware(
-    {target: "http://localhost:8000", changeOrigin:true }
+    { target: "http://localhost:8000", changeOrigin: true }
 ));
 
 app.listen(8888, () => console.log("API Gateway running on port 8888"));

@@ -5,6 +5,7 @@ import Signup from "./Components/SignUpAndLogin/Signup"
 import Login from "./Components/SignUpAndLogin/Login"
 import UserProfile from "./Components/UserProfile/UserProfile"
 import AdminLogin from "./Components/AdminLoginSignup/AdminLogin"
+import AdminProfile from "./AdminProfile/AdminProfile"
 
 
 
@@ -13,6 +14,7 @@ const router = createBrowserRouter([
         {path:"/",element: <OuterLayout /> ,  children:[
                 {path:'signupOrLogin',element: <LoginOrSigninPage/>},
                 {path:'userProfile',element: <UserProfile/>},
+                {path:'adminProfile',element: <AdminProfile/>},
                 {path:'admin/adminLogin',element: <AdminLogin/>},
 
 

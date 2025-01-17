@@ -17,7 +17,7 @@ const AdminLogin = () => {
     const signIn = useMutation({
         mutationFn: async (user : { email : string , password : string}) => {
             console.log("tesssst")
-            const result = await fetch(APILink + "IAM/user/login", {
+            const result = await fetch(APILink + "IAM/admin/login", {
                 method: "POST",
                 credentials: 'include',
                 headers: {
@@ -35,7 +35,7 @@ const AdminLogin = () => {
             
             const token = result.headers.get("x-auth-token")
             localStorage.setItem("x-auth-token",token??'')
-            navigate("/userProfile")
+            navigate("/adminProfile")
 
             return jsonResult
           }else{
@@ -48,7 +48,7 @@ const AdminLogin = () => {
             console.log(user);
             // localStorage.setItem("auth-token-nex",result.token);
             // localStorage.setItem("auth-refresh",savedUser.refresh);
-            queryClient.invalidateQueries({queryKey:["user"]});
+            queryClient.invalidateQueries({queryKey:["admin"]});
             // setUser({id : savedUser.id, username : user.email})
             // navigate("/operations");
         },
