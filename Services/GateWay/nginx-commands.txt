@@ -1,0 +1,7 @@
+sudo brew services reload nginx
+
+sudo brew services start nginx
+
+sudo brew services stop nginx
+
+sudo nginx -t
