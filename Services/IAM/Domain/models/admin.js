@@ -1,4 +1,4 @@
-import { sequelize } from '../../DB/db.js';
+import { sequelize } from '../../DB/postgre.js';
 import logger from '../../utilities/loggers/generalLogger.js';
 import adminSchema from "../schemas/admin.js";
 
