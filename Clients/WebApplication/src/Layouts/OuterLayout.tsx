@@ -48,7 +48,7 @@ const OuterLayout = () => {
   return (
     <AdminContext.Provider value={{admin : admin , setAdmin : setAdmin , isLoading : loading}}>
     <UserContext.Provider value={{user : user , setUser : setUser , isLoading : loading}}>
-            <Outlet />
+      <Outlet/>
     </UserContext.Provider>
     </AdminContext.Provider>
 

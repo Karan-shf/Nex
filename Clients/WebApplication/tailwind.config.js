@@ -8,6 +8,7 @@ export default {
       }
     },
     colors: {
+      "darkGray": "#434343",
       "chatBubblePrimary": "#AF042E",
       "chatBubbleSecondary": "#2E2E2E",
       "replyPrimary": "#680D24",
@@ -43,6 +44,7 @@ export default {
           // "base-200": "#0F111A",
           // "base-300": "#31374A",
           "base-content": "#Ffffff",
+
 
         },
       },
