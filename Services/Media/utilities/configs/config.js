@@ -6,3 +6,4 @@ export const dbHost = config.get("db.mongo.host");
 export const dbUsername = config.get("db.mongo.username");
 export const dbPassword = config.get("db.mongo.password");
 export const dbPort = config.get("db.mongo.port");
+export const rabbitmqConnectionURI = config.get("rabbitmq.connectionURI")
