@@ -13,6 +13,8 @@ export async function postgreConnect() {
     sequelize.authenticate()
     .then(() => logger.info('Connection to postgreSQL established successfully.'))
     .catch((err) => logger.error('Unable to connect to the postgre database', err))
+    
+    sequelize.sync({alter: true}).then(() => logger.info('All models were synchronized successfully.'));
 }
 
 // export async function closeConnection() {
@@ -20,5 +22,4 @@ export async function postgreConnect() {
 // }
 
 // export async function syncModels() {
-//     sequelize.sync({alter: true}).then(() => console.log('All models were synchronized successfully.'));
 // }
