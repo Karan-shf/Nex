@@ -10,22 +10,25 @@ import crypto from "crypto";
 import sendMail from "./nodeMailer.js";
 import { otpCreate, otpDelete, otpRead } from "../Infrastructure/otp.js";
 import logger from "../utilities/loggers/generalLogger.js";
+import grpcClient from "../utilities/message_brokers/grpc.js";
 
 
 export async function userRegister(req,res) {
 
-    const {error} = registerValidate(req.body);
+    let reqData = JSON.parse(req.body.reqData);
+
+    const {error} = registerValidate(reqData);
     if (error) return res.status(400).json({"error": error.details});
 
-    let user = await userRead({ email: req.body.email });
+    let user = await userRead({ email: reqData.email });
     user = user[0];
     if (user) return res.status(400).json({"error": "the given email is already taken"});
 
-    user = await userRead({ username: req.body.username });
+    user = await userRead({ username: reqData.username });
     user = user[0];
     if (user) return res.status(400).json({"error": "the given username is already taken"});
 
-    let otp = await otpRead( req.body.email);
+    let otp = await otpRead( reqData.email);
     if (!otp) return res.status(404).json({"error":"no otp found"});
 
     // otp = otp.toJSON();
@@ -35,22 +38,47 @@ export async function userRegister(req,res) {
     //     return res.status(400).json({"message":"otp expire time has passed"});
     // }
 
-    if (otp != req.body.verificationCode) return res.status(400).json({"error":"incorrect otp code"});
+    if (otp != reqData.verificationCode) return res.status(400).json({"error":"incorrect otp code"});
 
-    await otpDelete(req.body.email);
+    await otpDelete(reqData.email);
 
-    logger.info(`${req.body.email} verified`);
+    logger.info(`${reqData.email} verified`);
 
-    // let user = await User.findOne({ where: { email: req.body.email} });
+    // let user = await User.findOne({ where: { email: reqData.email} });
 
     const salt = await bcrypt.genSalt(10);
-    req.body.password = await bcrypt.hash(req.body.password, salt);
+    reqData.password = await bcrypt.hash(reqData.password, salt);
 
-    user = await userCreate(req.body);
+    user = await userCreate(reqData);
     
     const token = createJwtToken(user.id, false);
 
-    return res.header("x-auth-token", token).json({"user": _.omit(user.toJSON(), ["password"])});
+    if (req.file) {
+
+        const grpcRequest = {
+            file: req.file.buffer,
+            filename: req.file.filename,
+            originalname: req.file.originalname,
+            uploadedBy: user?.id || 'anonymous',
+        };
+    
+        grpcClient.UploadFile(grpcRequest, async (err, response) => {
+            if (err) {
+                logger.error('gRPC upload failed', err);
+                return res.status(500).send('Failed to upload file.');
+            }
+    
+            logger.info("File uploaded via gRPC", response);
+    
+            user.profilePic = response.filename;
+            user = await user.save();
+
+            return res.status(200).header("x-auth-token", token).json({"user": _.omit(user.toJSON(), ["password"])});
+        });
+    } else {
+
+        return res.status(200).header("x-auth-token", token).json({"user": _.omit(user.toJSON(), ["password"])});
+    }   
 }
 
 export async function userLogin(req,res) {

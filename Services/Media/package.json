@@ -12,6 +12,8 @@
   "description": "",
   "type": "module",
   "dependencies": {
+    "@grpc/grpc-js": "^1.12.5",
+    "@grpc/proto-loader": "^0.7.13",
     "amqplib": "^0.10.5",
     "config": "^3.3.12",
     "express": "^4.21.2",
