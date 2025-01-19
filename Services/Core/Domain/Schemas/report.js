@@ -15,9 +15,9 @@ export default {
     },
     furtherExplanations: {
         type: DataTypes.STRING(400),
-        allowNull: false
+        allowNull: true
     },
-    reportType: {
+    reportState: {
         type: DataTypes.ENUM("Pending","Accepted","Ignored"),
         allowNull: false,
         defaultValue: "Pending"

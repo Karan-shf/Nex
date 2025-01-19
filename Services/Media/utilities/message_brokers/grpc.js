@@ -26,7 +26,7 @@ function uploadFile(call, callback) {
             filename: uploadStream.filename,
             uploadDate: new Date().toISOString(),
         };
-        logger.info('File uploaded successfully:', response);
+        logger.info('File uploaded successfully', response);
         callback(null, response);
     });
 

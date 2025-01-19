@@ -10,6 +10,10 @@ export default {
         allowNull: true,
         unique: true
     },
+    mediaType: {
+        type: DataTypes.ENUM("image","video"),
+        allowNull: true
+    },
     postType: {
         type: DataTypes.ENUM("Post","Comment","Quote"),
         allowNull: false,
@@ -33,20 +37,22 @@ export default {
     },
     likes: {
         type: DataTypes.INTEGER,
-        allowNull: false
+        allowNull: false,
+        defaultValue: 0
     },
     views: {
         type: DataTypes.INTEGER,
-        allowNull: false
+        allowNull: false,
+        defaultValue: 0
     },
     bookmarks: {
         type: DataTypes.INTEGER,
-        allowNull: false
+        allowNull: false,
+        defaultValue: 0
     },
     is_banned: {
         type: DataTypes.BOOLEAN,
         allowNull: false,
         defaultValue: false
     }
-
 }
