@@ -1,6 +1,8 @@
 import { Link, useLocation, useNavigate } from "react-router-dom"
 import Logo from "../../assets/images/LogoNex.png"
 import { useUserContext } from "../../contexts/UserContexts"
+import { useEffect, useState } from "react"
+import PostAPost from "../../PostAPost/PostAPost"
 
 const SideBar = () => {
   const {user } = useUserContext()
@@ -11,6 +13,12 @@ const SideBar = () => {
     localStorage.removeItem("x-auth-token")
     manage("signupOrLogin")
   }
+
+  const [dialogElement, setDialogElement] = useState<HTMLDialogElement | null>(null);
+  
+  useEffect(() => {
+    setDialogElement(document.getElementById("test") as HTMLDialogElement | null);
+  }, [dialogElement]);
   return (
     <div className="mt-2 ml-9 flex-col flex xl:items-start items-end pr-6">
         <img className=" mb-10 w-12 h-12 min-w-12 min-h-12 " src={Logo}></img>
@@ -83,13 +91,13 @@ const SideBar = () => {
               <p className="hidden xl:block">Saves</p>
             </Link>
 
-            <Link  className="flex items-center justify-center  gap-4 bg-primary xl:rounded-3xl p-2 xl:w-3/4 rounded-full w-fit" to="">
+            <button type='button' onClick={() => { dialogElement?.showModal(); console.log(dialogElement) }} className="flex items-center justify-center  gap-4 bg-primary xl:rounded-3xl p-2 xl:w-3/4 rounded-full w-fit">
               <p className="hidden xl:block">Post</p>
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-8 block xl:hidden ">
                 <path strokeLinecap="round" strokeLinejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L6.832 19.82a4.5 4.5 0 0 1-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 0 1 1.13-1.897L16.863 4.487Zm0 0L19.5 7.125" />
               </svg>
+            </button>
 
-            </Link>
 
             <button  className="flex items-center text-lg font-semibold  w-3/4 dropdown dropdown-top">
               {user?.profilePic

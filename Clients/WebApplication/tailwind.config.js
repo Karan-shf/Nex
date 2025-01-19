@@ -14,7 +14,12 @@ export default {
       "replyPrimary": "#680D24",
       "black": "#000000",
       "white": "#ffffff",
-      "backdropp": "rgba(255, 255, 255, 0.3)"
+      "backdropp": "rgba(255, 255, 255, 0.3)",
+      "backdropDark": "rgba(6, 6, 18, 0.7)",
+      "cyan": "#0aa88e",
+      "blue": "#0a76a8",
+      "purple": "#6c0aa8",
+      "green": "#0aa869"
 
 
     }

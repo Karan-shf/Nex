@@ -8,6 +8,7 @@ import SectionLayout from "./Layouts/SectionLayout"
 import Explore from "./Components/Explore/Explore"
 import Saves from "./Components/Saves/Saves"
 import Notifications from "./Components/Notification/Notifications"
+import Home from "./Components/Home/Home"
 
 
 
@@ -24,6 +25,8 @@ const router = createBrowserRouter([
                         {path:'explore',element: <Explore/>},
                         {path:'saves',element: <Saves/>},
                         {path:'notifications',element: <Notifications/>},
+
+                        {path:"/" , element: <Home/>}
         
                 ]}
 

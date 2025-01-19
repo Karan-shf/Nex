@@ -25,3 +25,26 @@ export interface UserSignupInterface {
     pfp?:string|undefined,
     verificationCode?:string|undefined
   }
+
+
+export interface Post{
+    postId: number,
+    mediaFileName?: string,
+    mediaType?: "video"|"image",
+    postType: "Post"|"Comment"|"Quote",
+    postDate: Date
+    content: string
+    quotedFrom ?: number
+    repliesTo?: number
+    like:number
+    commentNum:number
+    view: number
+    isLiked:boolean,
+    isBookmarked:boolean
+    author:{
+        name:string
+        username:string
+        userId:number 
+        profilePic:string
+    }
+}

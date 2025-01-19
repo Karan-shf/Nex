@@ -35,6 +35,7 @@ const Login = () => {
             
             const token = result.headers.get("x-auth-token")
             localStorage.setItem("x-auth-token",token??'')
+            
             navigate("/userProfile")
 
             return jsonResult
