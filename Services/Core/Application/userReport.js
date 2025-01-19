@@ -6,8 +6,8 @@ import { sendUserValidationRequest } from "../utilities/message_brokers/rabbitmq
 
 export async function reportUser(req, res) {
 
-    const {error} = reportValidate(req.body);
-    if (error) return res.status(400).json({"error": error.details});
+    const { error } = reportValidate(req.body);
+    if (error) return res.status(400).json({ "error": error.details });
 
     if (req.user.id==req.body.reportedID) return res.status(400).json({"error": "you can't report yourself"});
     

@@ -1,29 +1,11 @@
 import { useEffect, useState } from "react"
 import { GetTredingHashtags } from "./api"
+import { Symbolize } from "../../functions/functions"
 
 
 const InfoBar = () => {
   const [topTrends , setToptrends] = useState<{count:number , name:string}[]>([])
-  let final =''
-  function Symbolize(count:number){
-    if(count > 999999999){
-      final = (count/1000000000).toFixed(1)
-      return final +"B"
-    }else
-    if(count > 999999){
-      count = count/1000000
-      final =(count.toFixed(1))
-      return final+"M"
-    } else
-    if(count > 999){
-      count = count/1000
-      final =(count.toFixed(1))
-      return final+"K"
-    }else{
-      return count.toString()
-    }
-    
-  }
+
 
   useEffect(()=>{
     setToptrends(GetTredingHashtags())

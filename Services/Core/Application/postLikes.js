@@ -6,15 +6,15 @@ import { notifCreate } from "../Infrastructure/notif.js"
 
 export async function toggleLike(req, res) {
 
-    const {error} = objectIDValidate(req.body);
-    if (error) return res.status(400).json({"error": error.details});
+    const { error } = objectIDValidate(req.body);
+    if (error) return res.status(400).json({ "error": error.details });
 
-    let post = await postReadByPK(req.body.postID);
-    if (!post) return res.status(400).json({"error": "given post id does not exist!"})
+    let post = await postReadByPK(req.body.id);
+    if (!post) return res.status(400).json({ "error": "given post id does not exist!" })
 
     req.body.userID = req.user.id;
 
-    // const postLikes = await postLikesRead({userID: req.user.id, postID: req.body.postID});
+    // const postLikes = await postLikesRead({userID: req.user.id, id: req.body.id});
     const postLikes = await postLikesRead(req.body);
     let postLike = postLikes[0];
 
@@ -24,7 +24,7 @@ export async function toggleLike(req, res) {
         post.likes--;
         await post.save();
 
-        return res.status(200).json({"message":"successfully unliked the post"});
+        return res.status(200).json({ "message": "successfully unliked the post" });
     }
 
     post.likes++;
@@ -32,8 +32,8 @@ export async function toggleLike(req, res) {
 
     postLike = await postLikesCreate(req.body);
 
-    const notif = await notifCreate({userID: post.userID, content: `Your Post Has been Liked by @${req.user.username}`});
-    
+    const notif = await notifCreate({ userID: post.userID, content: `Your Post Has been Liked by @${req.user.username}` });
+
     return res.status(200).json({
         "message": "successfully liked the post",
         "object": postLike,

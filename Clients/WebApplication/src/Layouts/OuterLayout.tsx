@@ -34,14 +34,14 @@ const OuterLayout = () => {
 
     }
 
-    if(err){
-      setAdmin(null);
-      console.log("err")
-  }else if (serverAdmin?.email && !_.isEqual(serverAdmin,admin)){
-      setAdmin(serverAdmin);
-      console.log("nrr")
+  //   if(err){
+  //     setAdmin(null);
+  //     console.log("err")
+  // }else if (serverAdmin?.email && !_.isEqual(serverAdmin,admin)){
+  //     setAdmin(serverAdmin);
+  //     console.log("nrr")
 
-  }
+  // }
 },[serverUser,isLoading , isl , serverAdmin]);
 
 
