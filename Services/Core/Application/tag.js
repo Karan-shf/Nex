@@ -1,7 +1,7 @@
 import { tagCreate, tagRead } from "../Infrastructure/tag.js"
 import { postTagCreate, postTagRead } from "../Infrastructure/postTag.js"
 
-export async function extractPostTags(content, id) {
+export async function extractPostTags(content, postID) {
 
     const tags = content.match(/#\w+/g);
 

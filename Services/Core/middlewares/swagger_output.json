@@ -93,7 +93,7 @@
             "schema": {
               "type": "object",
               "properties": {
-                "id": {
+                "postID": {
                   "example": "any"
                 },
                 "userID": {
@@ -134,7 +134,7 @@
             "schema": {
               "type": "object",
               "properties": {
-                "id": {
+                "postID": {
                   "example": "any"
                 },
                 "userID": {
