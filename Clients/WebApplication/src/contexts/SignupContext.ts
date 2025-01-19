@@ -6,6 +6,8 @@ interface UserSignupContextInterface {
     setUserObj: Dispatch<SetStateAction<UserSignupInterface | undefined>>;
     stage: "name email birth" | "verf code" | "password" | "pfp" | "username";
     setStage: Dispatch<SetStateAction<"name email birth" | "verf code" | "password" | "pfp" | "username">>;
+    profilePic: File | undefined
+    setProfilePic: Dispatch<SetStateAction<File | undefined>>;
 }
 
 export const SignupContext = createContext<UserSignupContextInterface | null>(null);

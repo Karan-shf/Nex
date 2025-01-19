@@ -13,7 +13,9 @@ import { SignupContext } from "../../contexts/SignupContext";
 const Signup = () => {
   const [error , setError] = useState("")
   const dialogRef = useRef<HTMLDialogElement>(null);
+  // const [stage , setStage] = useState<"name email birth" |"verf code" |"password" |"pfp" |"username">("name email birth")
   const [stage , setStage] = useState<"name email birth" |"verf code" |"password" |"pfp" |"username">("name email birth")
+  const [profilePic , setProfilePic] = useState<File>()
   const [userObj , setUserObj] = useState<UserSignupInterface | undefined>(
     {
       email: "",
@@ -49,7 +51,7 @@ const Signup = () => {
                     <h2 className="text-3xl font-semibold mb-10">Login to Your Account</h2>
                     <p className="text-xl">{error}</p>
                 </div> */}
-                <SignupContext.Provider value={{ userObj, setUserObj, stage, setStage }}>
+                <SignupContext.Provider value={{ userObj, setUserObj, stage, setStage , profilePic ,setProfilePic }}>
                   {stage=="name email birth" && <NameEmailBirth/>}
                   {stage=="verf code" && <VerifyEmail />}
                   {stage=="password" && <ChoosePassword />}

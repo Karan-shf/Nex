@@ -11,11 +11,11 @@ export default {
         unique: true
     },
     mediaType: {
-        type: DataTypes.ENUM("image","video"),
+        type: DataTypes.ENUM("image", "video"),
         allowNull: true
     },
     postType: {
-        type: DataTypes.ENUM("Post","Comment","Quote"),
+        type: DataTypes.ENUM("Post", "Comment", "Quote"),
         allowNull: false,
     },
     postDate: {

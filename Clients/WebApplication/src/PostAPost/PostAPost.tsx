@@ -3,6 +3,9 @@ import { useUserContext } from "../contexts/UserContexts";
 import defaultUser from "../assets/images/defaultAvatar.jpg";
 import EmojiPicker, { EmojiClickData } from "emoji-picker-react";
 import {toast } from 'react-toastify';
+import { closeModal, closeModalWithId, GetMediaLink } from "../functions/functions";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { APILink } from "../consts/consts";
 
 const PostAPost = () => {
   const dialogRef = useRef<HTMLDialogElement>(null);
@@ -12,6 +15,8 @@ const PostAPost = () => {
   const [mediaPreview, setMediaPreview] = useState<string | null>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [isLoading , setIsLoading] = useState(false)
+  const [file,setFile] = useState<File|null>(null)
+  let queryClient = useQueryClient();
   
 
   const handleInputChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -35,13 +40,85 @@ const PostAPost = () => {
   };
 
   const handleMediaPicker = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      const objectUrl = URL.createObjectURL(file); // Generate a preview URL
+    const tempFile = event.target.files?.[0];
+    if (tempFile) {
+      const objectUrl = URL.createObjectURL(tempFile); // Generate a preview URL
       setMediaPreview(objectUrl);
       console.log(objectUrl , 'obj')
+      setFile(tempFile)
     }
   };
+
+    interface PostNexusInterface{
+        reqData : {content:string , quotedFrom?:number , repliesTo?:number }
+        file: File|null
+    }
+
+    const postaNexus = useMutation({
+        mutationFn: async ({ reqData, file }: PostNexusInterface) => {
+            toast.info("Nexus is forming, please be patient")
+            const formData = new FormData();
+            formData.append("reqData", JSON.stringify(reqData));
+            if (file) {
+                formData.append("file", file);
+            }
+            const result = await fetch(APILink + "core/post/", {
+                method: "POST",
+                // credentials: "include",
+                headers: {
+                    // "Content-Type": "application/json",
+                    "x-auth-token": localStorage.getItem("x-auth-token") ?? ""
+                },
+                body: formData,
+            });
+            const jsonResult = await result.json();
+            //   console.log(jsonResult)
+            if (result.ok) {
+                return jsonResult;
+            } else {
+                let errorMessage = "unexpected error";
+
+                if (_.isString(jsonResult)) {
+                    errorMessage = jsonResult;
+                } else {
+                    console.log("random error")
+                }
+                throw new Error(errorMessage);
+            }
+        },
+        onSuccess: () => {
+            console.log("success");
+            // queryClient.invalidateQueries({ queryKey: ["bots"] });
+            queryClient.invalidateQueries({ queryKey: ["feeds"] });
+            toast.success("Welcome!")
+            setIsLoading(false)
+            closeModalWithId("test")
+
+            //   navigate("/operations/addSubOperation/"+savedOperation.data.id);
+        },
+        onError: (error) => {
+            console.log("error12");
+            console.log(error);
+            toast.error("Couldnt Login")
+            // console.log(error.message);
+            // let errorText = 'error';
+            // setError(error.message);
+            // setSubmitLoading(false);
+            
+        },
+    });
+
+    const nexusSubmit = ({ reqData, file }: PostNexusInterface) => {
+        // setSubmitLoading(true);
+        console.log("111");
+        // console.log(data.avatar["0"]);
+        // data.avatar = data.avatar["0"];
+        console.log('sthh', reqData, file);
+        postaNexus.mutate({
+            reqData, file
+        });
+    };
+    
 
   useEffect(() => {
     adjustTextareaHeight(); // Adjust height when the component mounts
@@ -67,7 +144,7 @@ const PostAPost = () => {
 
         <div className=" overflow-auto max-h-80">
             <div className="flex">
-            <img className="max-w-12 max-h-12 rounded-full" src={defaultUser} alt="User" />
+            <img className="max-w-12 max-h-12 rounded-full "src={user?.profilePic ? GetMediaLink(user.profilePic) : defaultUser} alt="User" />
             <div className="pl-5 w-full h-fit">
                 <textarea
                 ref={textareaRef}
@@ -166,7 +243,7 @@ const PostAPost = () => {
               </svg>
             </button>
           </div>
-          <button onClick={()=>{toast.info("Nexus is forming, please be patient");setIsLoading(true)}} className="px-6 py-1 rounded-full text-base font-semibold text-primary border-2 border-r-primary">
+          <button onClick={()=>{setIsLoading(true) ; nexusSubmit({reqData:{content:content} , file:file})}} className="px-6 py-1 rounded-full text-base font-semibold text-primary border-2 border-r-primary">
             {!isLoading ? "Form" : <span className="loading loading-dots loading-md"></span> }
           </button>
         </div>

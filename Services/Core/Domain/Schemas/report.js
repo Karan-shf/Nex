@@ -10,7 +10,7 @@ export default {
         allowNull: false
     },
     reportType: {
-        type: DataTypes.ENUM("Hate Speech","Harassment","Violent Speech","Child Safety","Privacy","Spam"),
+        type: DataTypes.ENUM("Hate Speech", "Harassment", "Violent Speech", "Child Safety", "Privacy", "Spam"),
         allowNull: false
     },
     furtherExplanations: {
@@ -18,7 +18,7 @@ export default {
         allowNull: true
     },
     reportState: {
-        type: DataTypes.ENUM("Pending","Accepted","Ignored"),
+        type: DataTypes.ENUM("Pending", "Accepted", "Ignored"),
         allowNull: false,
         defaultValue: "Pending"
     }

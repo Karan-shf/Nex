@@ -3,9 +3,19 @@ import { useSignupContext } from "../../../contexts/SignupContext";
 import { APILink } from "../../../consts/consts";
 import { useNavigate } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
+import {toast } from 'react-toastify';
+import { useMutation } from "@tanstack/react-query";
+import { UserSignupInterface } from "../../../Interfaces/Interfaces";
+import _ from "lodash";
+
+interface RegisterInterface {
+    reqData: UserSignupInterface | undefined,
+    file: File | undefined
+}
+
 
 const VerifyEmail = () => {
-  const { userObj, setUserObj, setStage } = useSignupContext();
+  const { userObj, setUserObj, setStage , profilePic } = useSignupContext();
   const [error , setError] = useState('')
   const navigate = useNavigate()
   let queryClient = useQueryClient();
@@ -46,48 +56,71 @@ const VerifyEmail = () => {
     
   }
 
+  const registerUser = useMutation({
+    mutationFn: async ({ reqData, file }: RegisterInterface) => {
+        const formData = new FormData();
+        formData.append("reqData", JSON.stringify(reqData));
+        if (file) {
+            formData.append("file", file);
+        }
+        const result = await fetch(APILink + "iam/user/register", {
+            method: "POST",
+            // credentials: "include",
+            headers: {
+                // "Content-Type": "application/json"
+            },
+            body: formData,
+        });
+        const jsonResult = await result.json();
+        //   console.log(jsonResult)
+        if (result.ok) {
+            return jsonResult;
+        } else {
+            let errorMessage = "unexpected error";
+
+            if (_.isString(jsonResult)) {
+                errorMessage = jsonResult;
+            } else {
+                console.log("random error")
+            }
+            throw new Error(errorMessage);
+        }
+    },
+    onSuccess: () => {
+        console.log("success");
+        // queryClient.invalidateQueries({ queryKey: ["bots"] });
+        toast.success("Welcome!")
+        navigate("/")
+
+        //   navigate("/operations/addSubOperation/"+savedOperation.data.id);
+    },
+    onError: (error) => {
+        console.log("error12");
+        console.log(error);
+        toast.error("Couldnt Login")
+        // console.log(error.message);
+        // let errorText = 'error';
+        // setError(error.message);
+        // setSubmitLoading(false);
+        
+    },
+});
+ const userSubmit = ({ reqData, file }: RegisterInterface) => {
+    // setSubmitLoading(true);
+    console.log("111");
+    // console.log(data.avatar["0"]);
+    // data.avatar = data.avatar["0"];
+    console.log('sthh', reqData, file);
+    registerUser.mutate({
+        reqData, file
+    });
+};
+
   useEffect(()=>{
     SendEmail()
   },[])
 
-  async function HandleNextStage(){
-    try {
-      const res = await fetch(APILink+"IAM/user/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json", 
-        },
-        body: JSON.stringify(userObj), 
-      });
-
-      const result = await res.json(); 
-      
-      // if(result.success){
-      //   setError('')
-      //   console.log('yayyy',result)
-      // }else{
-      // setError("something went wrong")
-
-      // }
-      if (res.ok) {
-        // Handle success
-        // setError('')
-        console.log("Request successful:", result);
-        const token = res.headers.get("x-auth-token")
-        console.log('llop',res.headers)
-        localStorage.setItem("x-auth-token" , token ?? '')
-        queryClient.invalidateQueries({queryKey:["user"]});
-        navigate("/userProfile")
-
-      } else {
-        // Handle failure
-        console.log("Request failed:", result);
-      }
-    } catch (error) {
-      setError("something went wrong")
-      console.error("Error occurred:", error);
-    }
-  }
+  
   return (
       <div className="px-10 h-96">
         <h2 className="text-3xl font-semibold ">We Sent You a Code</h2>
@@ -102,7 +135,7 @@ const VerifyEmail = () => {
             onChange={(e)=>setUserObj({...userObj , verificationCode:e.target.value})}
             />
 
-            <button onClick={()=>HandleNextStage()} className="bg-white text-black rounded-md px-6 py-2 w-full mb-3 text-2xl " type="button" >
+            <button onClick={()=>userSubmit({reqData:userObj , file:profilePic})} className="bg-white text-black rounded-md px-6 py-2 w-full mb-3 text-2xl " type="button" >
                 <span className="text-primary">Nex</span>t
             </button>
         </form> 

@@ -22,13 +22,12 @@ export interface UserSignupInterface {
     username?:string|undefined,
     name?:string|undefined,
     birthDate?:Date|undefined,
-    pfp?:string|undefined,
     verificationCode?:string|undefined
   }
 
 
 export interface Post{
-    postId: number,
+    id: number,
     mediaFileName?: string,
     mediaType?: "video"|"image",
     postType: "Post"|"Comment"|"Quote",
@@ -36,15 +35,16 @@ export interface Post{
     content: string
     quotedFrom ?: number
     repliesTo?: number
-    like:number
-    commentNum:number
-    view: number
+    likes:number
+    comments:number
+    views: number
+    bookmarks:number
     isLiked:boolean,
     isBookmarked:boolean
     author:{
         name:string
         username:string
-        userId:number 
+        userID:number 
         profilePic:string
     }
 }

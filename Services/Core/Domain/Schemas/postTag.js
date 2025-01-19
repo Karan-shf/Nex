@@ -5,7 +5,7 @@ export default {
         type: DataTypes.INTEGER,
         primaryKey: true
     },
-    postID: {
+    id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
     }

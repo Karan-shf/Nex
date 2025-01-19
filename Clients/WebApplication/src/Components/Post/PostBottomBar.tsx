@@ -15,7 +15,7 @@ const PostBottomBar = ({post}:PostInfo) => {
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-5 ">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 20.25c4.97 0 9-3.694 9-8.25s-4.03-8.25-9-8.25S3 7.444 3 12c0 2.104.859 4.023 2.273 5.48.432.447.74 1.04.586 1.641a4.483 4.483 0 0 1-.923 1.785A5.969 5.969 0 0 0 6 21c1.282 0 2.47-.402 3.445-1.087.81.22 1.668.337 2.555.337Z" />
             </svg>
-            <p>{Symbolize(post?.commentNum)}</p>
+            <p>{Symbolize(post?.comments)}</p>
         </button>
         
         <button className={`flex gap-1 items-center hover:text-primary ${post.isLiked && "text-primary"} `}>
@@ -25,7 +25,7 @@ const PostBottomBar = ({post}:PostInfo) => {
                      : "M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z"} />
             </svg>
 
-            <p>{Symbolize(post?.like)}</p>
+            <p>{Symbolize(post?.likes)}</p>
         </button>
 
         <button className={"flex gap-1 items-center hover:text-purple"}>
@@ -33,7 +33,7 @@ const PostBottomBar = ({post}:PostInfo) => {
             <   path d="M18.375 2.25c-1.035 0-1.875.84-1.875 1.875v15.75c0 1.035.84 1.875 1.875 1.875h.75c1.035 0 1.875-.84 1.875-1.875V4.125c0-1.036-.84-1.875-1.875-1.875h-.75ZM9.75 8.625c0-1.036.84-1.875 1.875-1.875h.75c1.036 0 1.875.84 1.875 1.875v11.25c0 1.035-.84 1.875-1.875 1.875h-.75a1.875 1.875 0 0 1-1.875-1.875V8.625ZM3 13.125c0-1.036.84-1.875 1.875-1.875h.75c1.036 0 1.875.84 1.875 1.875v6.75c0 1.035-.84 1.875-1.875 1.875h-.75A1.875 1.875 0 0 1 3 19.875v-6.75Z" />
             </svg>
 
-            <p>{Symbolize(post?.view)}</p>
+            <p>{Symbolize(post?.views)}</p>
         </button>
 
         <button className={"flex gap-1 items-center hover:text-green"}>

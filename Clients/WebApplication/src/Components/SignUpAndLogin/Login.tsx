@@ -17,9 +17,9 @@ const Login = () => {
     const signIn = useMutation({
         mutationFn: async (user : { email : string , password : string}) => {
             console.log("tesssst")
-            const result = await fetch(APILink + "IAM/user/login", {
+            const result = await fetch(APILink + "iam/user/login", {
                 method: "POST",
-                credentials: 'include',
+                // credentials: 'include',
                 headers: {
                   "Content-Type": "application/json",
                 },
