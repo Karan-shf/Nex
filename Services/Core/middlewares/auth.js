@@ -1,4 +1,4 @@
-import sendTokenValidationRequest from "../utilities/message_brokers/rabbitmq.js";
+import { sendTokenValidationRequest } from "../utilities/message_brokers/rabbitmq.js";
 import logger from "../utilities/loggers/generalLogger.js";
 
 export async function auth(req, res, next) {

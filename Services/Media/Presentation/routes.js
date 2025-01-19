@@ -27,7 +27,7 @@ export default function(app) {
 
     app.get("/", auth, allFiles);
 
-    app.get("/file/:filename", auth, getFile);
+    app.get("/file/:filename", getFile);
 
     app.delete("/file/:id", auth, deleteFile);
 

@@ -20,8 +20,7 @@ export default {
     },
     postDate: {
         type: DataTypes.DATE,
-        allowNull: false,
-        defaultValue: Date.now()
+        allowNull: false
     },
     quotedFrom: {
         type: DataTypes.INTEGER,
@@ -46,6 +45,11 @@ export default {
         defaultValue: 0
     },
     bookmarks: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        defaultValue: 0
+    },
+    comments: {
         type: DataTypes.INTEGER,
         allowNull: false,
         defaultValue: 0

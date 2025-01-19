@@ -14,6 +14,10 @@ router.post("/check/email", checkEmail);
 router.post("/check/username", checkUsername);
 
 router.get("/me",Auth, me);
+// router.get("/me",Auth, me);
+router.get("/test", (req,res) => {
+    return res.status(200).json({"message":"hello"});
+});
 
 router.post("/otp/sendEmail", sendVerificationEmail);
 
