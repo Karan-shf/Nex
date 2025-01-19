@@ -2,10 +2,11 @@ import amqp from "amqplib";
 import { v4 as uuidv4 } from "uuid";
 import { rabbitmqConnectionURI } from "../configs/config.js";
 
-export default async function sendTokenValidationRequest(token) {
+export async function sendTokenValidationRequest(token) {
+
     const connection = await amqp.connect(rabbitmqConnectionURI);
     const channel = await connection.createChannel();
-
+    
     const queue = "token_validation";
     const responseQueue = await channel.assertQueue("", { exclusive: true });
 
@@ -18,6 +19,7 @@ export default async function sendTokenValidationRequest(token) {
                 if (message.properties.correlationId === correlationId) {
                     const response = JSON.parse(message.content.toString());
                     resolve(response);
+                    // channel.ack(message);
                     channel.close();
                 }
             },
@@ -25,6 +27,67 @@ export default async function sendTokenValidationRequest(token) {
         );
 
         channel.sendToQueue(queue, Buffer.from(JSON.stringify({ token })), {
+            correlationId,
+            replyTo: responseQueue.queue,
+        });
+    });
+}
+
+export async function sendUserValidationRequest(userID) {
+
+    const connection = await amqp.connect(rabbitmqConnectionURI);
+    const channel = await connection.createChannel();
+
+    const queue = "user_validation";
+    const responseQueue = await channel.assertQueue("", { exclusive: true });
+
+    const correlationId = uuidv4();
+
+    return new Promise((resolve, reject) => {
+        channel.consume(
+            responseQueue.queue,
+            (message) => {
+                if (message.properties.correlationId === correlationId) {
+                    const response = JSON.parse(message.content.toString());
+                    resolve(response);
+                    // channel.ack(message);
+                    channel.close();
+                }
+            },
+            { noAck: true }
+        );
+
+        channel.sendToQueue(queue, Buffer.from(JSON.stringify({ userID })), {
+            correlationId,
+            replyTo: responseQueue.queue,
+        });
+    });
+}
+
+export async function sendEntFetchRequest(entIDs, entType) {
+    const connection = await amqp.connect(rabbitmqConnectionURI);
+    const channel = await connection.createChannel();
+
+    const queue = "entity_fetch";
+    const responseQueue = await channel.assertQueue("", { exclusive: true });
+
+    const correlationId = uuidv4();
+
+    return new Promise((resolve, reject) => {
+        channel.consume(
+            responseQueue.queue,
+            (message) => {
+                if (message.properties.correlationId === correlationId) {
+                    const response = JSON.parse(message.content.toString());
+                    resolve(response);
+                    // channel.ack(message);
+                    channel.close();
+                }
+            },
+            { noAck: true }
+        );
+
+        channel.sendToQueue(queue, Buffer.from(JSON.stringify({ entIDs, entType })), {
             correlationId,
             replyTo: responseQueue.queue,
         });

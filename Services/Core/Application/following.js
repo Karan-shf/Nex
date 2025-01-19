@@ -2,6 +2,7 @@ import followingIDValidate from "../Contracts/following.js";
 import { followingCreate, followingRead } from "../Infrastructure/following.js";
 // import { postReadByPK } from "../Infrastructure/post.js";
 import { notifCreate } from "../Infrastructure/notif.js"
+import { sendUserValidationRequest } from "../utilities/message_brokers/rabbitmq.js";
 
 
 export async function toggleFollowing(req, res) {
@@ -11,10 +12,9 @@ export async function toggleFollowing(req, res) {
 
     if (req.user.id == req.body.followingID) return res.status(400).json({ "error": "you can't follow yourself" });
 
-    /* 
-    TODO: make a rabbitmq server in iam that takes a userID and checks whether this user exists or not
-    and make a call to it inside this endpoint
-    */
+    const response = await sendUserValidationRequest(req.body.followingID);
+    if (response.error) return res.status(500).json({"error": response.error});
+    if (!response.user) return res.status(400).json({"error": "invalid following id. user with the given id does not exist"});
 
     req.body.followerID = req.user.id;
 

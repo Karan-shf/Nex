@@ -1,6 +1,6 @@
 import { sequelize } from "../../DB/postgre.js";
 import logger from "../../utilities/loggers/generalLogger.js";
-import postViews from "../Schemas/postOpts.js";
+import postViews from "../Schemas/postViews.js";
 
 export const PostViews = sequelize.define("PostView", postViews);
 

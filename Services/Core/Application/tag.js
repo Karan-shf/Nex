@@ -5,14 +5,17 @@ export async function extractPostTags(content, id) {
 
     const tags = content.match(/#\w+/g);
 
-    tags.forEach(async tag => {
-        const tagObjs = await tagRead({ tag: tag });
-        let tagObj = tagObjs[0];
+    if (tags) {
+        tags.forEach(async tag => {
+            const tagObjs = await tagRead({tag:tag});
+            let tagObj = tagObjs[0];
+    
+            if (!tagObj) {
+                tagObj = await tagCreate({tag:tag})
+            }
+    
+            await postTagCreate({tagID:tagObj.id, postID:postID});
+        });
+    }
 
-        if (!tagObj) {
-            tagObj = await tagCreate({ tag: tag })
-        }
-
-        await postTagCreate({ tagID: tagObj.id, id: id });
-    });
 }
