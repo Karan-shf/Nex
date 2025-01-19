@@ -4,13 +4,17 @@ import defaultUser from "../assets/images/defaultAvatar.jpg";
 import EmojiPicker, { EmojiClickData } from "emoji-picker-react";
 import {toast } from 'react-toastify';
 import { closeModal, closeModalWithId, GetMediaLink } from "../functions/functions";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { APILink } from "../consts/consts";
+import { useParams } from "react-router-dom";
 
 const PostAComment = () => {
     const dialogRef = useRef<HTMLDialogElement>(null);
     const { user } = useUserContext();
     const [content, setContent] = useState("");
+    const {id} = useParams()
+    const {quotedFrom} = useParams()
+    let queryClient = useQueryClient();
     const [showEmojiPicker, setShowEmojiPicker] = useState(false);
     const [mediaPreview, setMediaPreview] = useState<string | null>(null);
     const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -47,6 +51,86 @@ const PostAComment = () => {
         }
       };
 
+      interface PostNexusInterface{
+        reqData : {content:string , quotedFrom?:number , repliesTo?:number }
+        file: File|null
+    }
+
+    const postaNexus = useMutation({
+        mutationFn: async ({ reqData, file }: PostNexusInterface) => {
+            toast.info("Nexus is forming, please be patient")
+            const formData = new FormData();
+            formData.append("reqData", JSON.stringify(reqData));
+            if (file) {
+                formData.append("file", file);
+            }
+
+            const result = await fetch(APILink + "core/post/", {
+                method: "POST",
+                // credentials: "include",
+                headers: {
+                    // "Content-Type": "application/json",
+                    "x-auth-token": localStorage.getItem("x-auth-token") ?? ""
+                },
+                body: formData,
+            });
+            const jsonResult = await result.json();
+            //   console.log(jsonResult)
+            if (result.ok) {
+                return jsonResult;
+            } else {
+                let errorMessage = "unexpected error";
+
+                if (_.isString(jsonResult)) {
+                    errorMessage = jsonResult;
+                } else {
+                    console.log("random error")
+                }
+                throw new Error(errorMessage);
+            }
+        },
+        onSuccess: () => {
+            console.log("success");
+            // queryClient.invalidateQueries({ queryKey: ["bots"] });
+            if (id){
+                queryClient.invalidateQueries({ queryKey: ["comments" , Number(id)] });
+            }
+            setFile(null)
+            setContent("")
+            toast.success("Welcome!")
+            setIsLoading(false)
+            closeModalWithId("test")
+
+            //   navigate("/operations/addSubOperation/"+savedOperation.data.id);
+        },
+        onError: (error) => {
+            console.log("error12");
+            console.log(error);
+            toast.error("Couldnt Login")
+            // console.log(error.message);
+            // let errorText = 'error';
+            // setError(error.message);
+            // setSubmitLoading(false);
+            
+        },
+    });
+
+    const nexusSubmit = ({ reqData, file }: PostNexusInterface) => {
+        // setSubmitLoading(true);
+        console.log("111");
+        // console.log(data.avatar["0"]);
+        // data.avatar = data.avatar["0"];
+        
+        if (id){
+            reqData.repliesTo=Number(id)
+        }
+        console.log('sthh', reqData, file);
+    
+        postaNexus.mutate({
+            reqData, file
+        });
+    };
+
     return (
         <div className="w-full p-5">
             <div className=" overflow-auto ">
@@ -76,13 +160,7 @@ const PostAComment = () => {
                 {mediaPreview && (
                 <div className="mt-3">
                     {/* <p className="text-sm text-secondary mb-1">Selected Media:</p> */}
-                    {mediaPreview.match(/image/) ? (
-                    <img
-                        src={mediaPreview}
-                        alt="Preview"
-                        className="max-w-full max-h-96 rounded-md border"
-                    />
-                    ) : (
+                    {file?.type.startsWith("image/") ? (
                         <div className="relative w-fit rounded-lg">
                             <button onClick={()=>setMediaPreview(null)} className="px-2 py-1 text-lg border-none backdrop-blur-md absolute right-2 top-2 bg-backdropDark  rounded-full hover:bg-white hover:text-black transition-colors">✕</button>
                             <img
@@ -93,11 +171,17 @@ const PostAComment = () => {
                             />
 
                         </div>
-                    // <video
-                    //     src={mediaPreview}
-                    //     controls
-                    //     className="max-w-full max-h-96 rounded-md border"
-                    // ></video>
+                    ) : (
+                        <div className="relative w-fit rounded-lg">
+                            <button onClick={()=>setMediaPreview(null)} className="px-2 py-1 text-lg border-none backdrop-blur-md absolute right-2 top-2 bg-backdropDark  rounded-full hover:bg-white hover:text-black transition-colors">✕</button>
+                            <video
+                            controls
+                            src={mediaPreview}
+                            className="max-w-full"
+                            style={{maxHeight:'800px'}}
+                            />
+
+                        </div>
                     )}
                 </div>
                 )}
@@ -107,7 +191,7 @@ const PostAComment = () => {
             <hr className="w-full text-secondary"></hr>
             <div className="flex justify-between mt-3">
             <div className="flex gap-2">
-                <label htmlFor="mediaPicker">
+                <label htmlFor="mediaPicker2">
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
@@ -123,7 +207,7 @@ const PostAComment = () => {
                     />
                 </svg>
                 <input
-                    id="mediaPicker"
+                    id="mediaPicker2"
                     type="file"
                     accept="image/*,video/*"
                     className="hidden"
@@ -151,7 +235,7 @@ const PostAComment = () => {
                 </svg>
                 </button>
             </div>
-            <button onClick={()=>{setIsLoading(true) }} className="px-6 py-1 rounded-full text-base font-semibold text-primary border-2 border-r-primary">
+            <button onClick={()=>{setIsLoading(true) ; nexusSubmit({reqData:{content:content} , file:file})}} className="px-6 py-1 rounded-full text-base font-semibold text-primary border-2 border-r-primary">
                 {!isLoading ? "Form" : <span className="loading loading-dots loading-md"></span> }
             </button>
             </div>
