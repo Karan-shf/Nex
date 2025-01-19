@@ -9,7 +9,6 @@ import { APILink } from "../consts/consts";
 import { useParams } from "react-router-dom";
 
 const PostAComment = () => {
-    const dialogRef = useRef<HTMLDialogElement>(null);
     const { user } = useUserContext();
     const [content, setContent] = useState("");
     const {id} = useParams()
