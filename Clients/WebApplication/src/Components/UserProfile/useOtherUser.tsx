@@ -18,7 +18,7 @@ function useOtherUser(id: string) {
             const jsonResult = await result.json();
             console.log(jsonResult)
             if (result.ok) {
-                return jsonResult as { data: User | undefined }
+                return jsonResult as  User | undefined
             } else {
                 throw new Error(jsonResult.error);
             }
