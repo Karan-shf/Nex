@@ -7,7 +7,7 @@ const router = Router();
 
 router.get("/", auth, getUserNotifs);
 
-router.put("/:id", auth, viewNotif);
+// router.put("/:id", auth, viewNotif);
 
 router.get("/count", auth, getUnseenNotifCount);
 

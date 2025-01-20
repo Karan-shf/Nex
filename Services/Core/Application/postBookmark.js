@@ -1,6 +1,7 @@
 import objectIDValidate from "../Contracts/objectID.js";
 import { postBookmarkCreate, postBookmarkRead } from "../Infrastructure/postBookmarks.js";
 import { postReadByPK } from "../Infrastructure/post.js";
+import { Op } from "sequelize";
 
 export async function toggleBookmark(req, res) {
 
@@ -33,4 +34,19 @@ export async function toggleBookmark(req, res) {
         "message": "successfully Bookmarkd the post",
         "object": postBookmark
     });
+}
+
+export async function getUserBookmarks(req, res, next) {
+    
+    const userBookmakrs = await postBookmarkRead({userID:req.user.id});
+
+    let postIDs = [];
+
+    userBookmakrs.forEach(bookmark => postIDs.push(bookmark.postID));
+
+    console.log(req.query.limit, req.query.offset);
+
+    req.condition = {id:{[Op.in]:postIDs}};
+
+    next();
 }

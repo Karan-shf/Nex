@@ -4,6 +4,7 @@ import posts from "./routes/post.js";
 import reports from "./routes/report.js";
 import followings from "./routes/following.js";
 import notifs from "./routes/notif.js"
+import user from "./routes/user.js";
 import error from "../middlewares/error.js";
 import cors from "../middlewares/cors.js";
 import logger from "../utilities/loggers/generalLogger.js";
@@ -28,10 +29,7 @@ export default function(app) {
     app.use("/report", reports);
     app.use("/following", followings);
     app.use("/notif", notifs);
-
-    app.get("/test",auth,(req,res) => {
-        return res.json(req.user);
-    });
+    app.use("/user", user);
 
     app.use(error);
 }
