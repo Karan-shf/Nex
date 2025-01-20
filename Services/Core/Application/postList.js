@@ -3,6 +3,7 @@ import { postBookmarkRead } from "../Infrastructure/postBookmarks.js";
 import { postRead } from "../Infrastructure/post.js";
 import { sendEntFetchRequest } from "../utilities/message_brokers/rabbitmq.js";
 import findPostAuthor from "./postAuthor.js";
+import _ from "lodash";
 
 export default async function postList(req, res) {
 
@@ -45,9 +46,11 @@ export default async function postList(req, res) {
         response.author = {
             userID: postAuthor.id,
             name: postAuthor.name,
-            username: postAuthor.name,
+            username: postAuthor.username,
             profilePic: postAuthor.profilePic,
+            verificationState: postAuthor.verificationState
         };
+        // response.author = _.pick(postAuthor,["id","name","username","profilePic","verificationState"])
         responses.push(response);
     });
 
