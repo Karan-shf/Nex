@@ -1,8 +1,9 @@
 import followingIDValidate from "../Contracts/following.js";
-import { followingCreate, followingRead } from "../Infrastructure/following.js";
-// import { postReadByPK } from "../Infrastructure/post.js";
+import { followingCreate, followingRead, followingReadInf } from "../Infrastructure/following.js";
 import { notifCreate } from "../Infrastructure/notif.js"
 import { sendUserValidationRequest } from "../utilities/message_brokers/rabbitmq.js";
+import { sendEntFetchRequest } from "../utilities/message_brokers/rabbitmq.js";
+import _ from "lodash";
 
 
 export async function toggleFollowing(req, res) {
@@ -35,5 +36,53 @@ export async function toggleFollowing(req, res) {
         "message": "successfully followed the user",
         "object": followerObj,
         "notif": notif
+    });
+}
+
+export async function getUserFollowers(req,res) {
+
+    const followers = await followingReadInf({followingID:req.user.id}, req.query.limit, req.query.offset);
+
+    const followersIDs = [];
+
+    followers.forEach(follower => followersIDs.push(follower.followerID));
+
+    const rabbitMQresponses = await sendEntFetchRequest(followersIDs,"user");
+    if (rabbitMQresponses.error) return res.status(500).json({"error": rabbitMQresponses.error});
+
+    const followerCards = [];
+
+    rabbitMQresponses.users.forEach(user => followerCards.push(_.pick(user,["id","name","profilePic","username","aboutUser"])));
+
+    const moreFollowers = await followingReadInf({followingID:req.user.id} , 1, req.query.offset+req.query.limit);
+    const hasMore = moreFollowers.length == 0 ? false:true;
+
+    return res.status(200).json({
+        hasMore: hasMore,
+        data: followerCards
+    });
+}
+
+export async function getUserFollowings(req,res) {
+
+    const followings = await followingReadInf({followerID:req.user.id}, req.query.limit, req.query.offset);
+
+    const followingsIDs = [];
+
+    followings.forEach(following => followingsIDs.push(following.followingID));
+
+    const rabbitMQresponses = await sendEntFetchRequest(followingsIDs,"user");
+    if (rabbitMQresponses.error) return res.status(500).json({"error": rabbitMQresponses.error});
+
+    const followingCards = [];
+
+    rabbitMQresponses.users.forEach(user => followingCards.push(_.pick(user,["id","name","profilePic","username","aboutUser"])));
+
+    const moreFollowings = await followingReadInf({followerID:req.user.id} , 1, req.query.offset+req.query.limit);
+    const hasMore = moreFollowings.length == 0 ? false:true;
+
+    return res.status(200).json({
+        hasMore: hasMore,
+        data: followingCards
     });
 }
