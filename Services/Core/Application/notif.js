@@ -1,4 +1,4 @@
-import { notifRead, notifReadByID, notifCountUnseen } from "../Infrastructure/notif.js";
+import { notifRead, notifReadByID, notifCountUnseen, notifUpdate } from "../Infrastructure/notif.js";
 
 export async function getUserNotifs(req,res) {
     
@@ -6,8 +6,13 @@ export async function getUserNotifs(req,res) {
         userID: req.user.id,
     },req.query.limit, req.query.offset);
 
+    const updateResult = await notifUpdate({
+        userID: req.user.id,
+    },req.query.limit, req.query.offset);
+
     const moreNotifs = await notifRead({
-        userID: req.user.id
+        userID: req.user.id,
+        isSeen: false
     }, 1, req.query.offset+req.query.limit);
     const hasMore = moreNotifs.length == 0 ? false:true;
 

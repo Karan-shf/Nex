@@ -12,7 +12,7 @@ export async function toggleFollowing(req, res) {
 
     if (req.user.id == req.body.followingID) return res.status(400).json({ "error": "you can't follow yourself" });
 
-    const response = await sendUserValidationRequest(req.body.followingID);
+    const response = await sendUserValidationRequest(req.body.followingID, "id");
     if (response.error) return res.status(500).json({"error": response.error});
     if (!response.user) return res.status(400).json({"error": "invalid following id. user with the given id does not exist"});
 

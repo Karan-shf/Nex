@@ -6,15 +6,14 @@ import { notifCreate } from "../Infrastructure/notif.js"
 
 export async function toggleLike(req, res) {
 
-    const { error } = objectIDValidate(req.body);
+    const { error } = objectIDValidate({id:req.body.postID});
     if (error) return res.status(400).json({ "error": error.details });
 
-    let post = await postReadByPK(req.body.id);
+    let post = await postReadByPK(req.body.postID);
     if (!post) return res.status(400).json({ "error": "given post id does not exist!" })
 
     req.body.userID = req.user.id;
 
-    // const postLikes = await postLikesRead({userID: req.user.id, id: req.body.id});
     const postLikes = await postLikesRead(req.body);
     let postLike = postLikes[0];
 

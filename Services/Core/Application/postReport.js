@@ -9,7 +9,7 @@ export async function reportPost(req, res) {
     if (error) return res.status(400).json({ "error": error.details });
 
     const post = await postReadByPK(req.body.reportedID);
-    if (!post) return res.status(400).json({ "error": "invalid id. post does not exist" });
+    if (!post) return res.status(400).json({ "error": "invalid postID. post does not exist" });
 
     req.body.userID = req.user.id;
 

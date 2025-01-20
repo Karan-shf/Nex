@@ -3,7 +3,7 @@ import logger from "../../utilities/loggers/generalLogger.js";
 import postTag from "../Schemas/postTag.js";
 import { Post } from "./post.js";
 
-export const PostTag = sequelize.define("PostTag", postTag, { timestamps:false });
+export const PostTag = sequelize.define("PostTag", postTag);
 
 // Post.belongsToMany(Tag, {through: "PostTags"});
 // Tag.belongsToMany(Post, {through: "PostTags"});

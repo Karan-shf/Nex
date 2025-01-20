@@ -33,7 +33,7 @@ export async function sendTokenValidationRequest(token) {
     });
 }
 
-export async function sendUserValidationRequest(userID) {
+export async function sendUserValidationRequest(userInfo, type) {
 
     const connection = await amqp.connect(rabbitmqConnectionURI);
     const channel = await connection.createChannel();
@@ -57,7 +57,7 @@ export async function sendUserValidationRequest(userID) {
             { noAck: true }
         );
 
-        channel.sendToQueue(queue, Buffer.from(JSON.stringify({ userID })), {
+        channel.sendToQueue(queue, Buffer.from(JSON.stringify({ userInfo, type })), {
             correlationId,
             replyTo: responseQueue.queue,
         });
