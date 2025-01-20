@@ -15,11 +15,48 @@ const SideBar = () => {
     manage("signupOrLogin")
   }
 
-  const [dialogElement, setDialogElement] = useState<HTMLDialogElement | null>(null);
+  async function FindUnseenNotifCount(){
+          try {
+              const res = await fetch(APILink+"core/notif/count", {
+                // method: "POST",
+                headers: {
+                  // "Content-Type": "application/json", 
+                  "x-auth-token":localStorage.getItem("x-auth-token") ?? ""
+                },
+                // body: JSON.stringify({"postID":post?.id}), 
+              });
+        
+              const result = await res.json(); 
+              
+              if(result.success){
+                  // console.log("sthhhhrrr" , result.data)
+              }else{
   
+              }
+              if (res.ok) {
+                console.log("Request successful:", result);
+                setUnseenNotifCount(result)
+              } else {
+                console.log("Request failed:", result);
+              }
+            } catch (error) {
+              console.error("Error occurred:", error);
+            }
+}
+
+  
+
+  const [dialogElement, setDialogElement] = useState<HTMLDialogElement | null>(null);
+  const [unseenNotifCount , setUnseenNotifCount] = useState<number>(0)
+
   useEffect(() => {
     setDialogElement(document.getElementById("test") as HTMLDialogElement | null);
+    FindUnseenNotifCount()
   }, [dialogElement]);
+
+  useEffect(()=>{
+
+  },[])
   return (
     <div className="mt-2 ml-9 flex-col flex xl:items-start items-end pr-6">
         <img className=" mb-10 w-12 h-12 min-w-12 min-h-12 " src={Logo}></img>
@@ -51,13 +88,19 @@ const SideBar = () => {
             <Link  className={`${location.pathname == "/notifications" ? 'font-bold': '' } flex items-center gap-4`} to="notifications">
             {location.pathname == "/notifications" 
               ?  
+              <div className="indicator">
+                {unseenNotifCount != 0 && <span className="indicator-item badge badge-sm  bg-primary">{unseenNotifCount}</span>}  
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="size-10 xl:size-8">
                 <path fillRule="evenodd" d="M5.25 9a6.75 6.75 0 0 1 13.5 0v.75c0 2.123.8 4.057 2.118 5.52a.75.75 0 0 1-.297 1.206c-1.544.57-3.16.99-4.831 1.243a3.75 3.75 0 1 1-7.48 0 24.585 24.585 0 0 1-4.831-1.244.75.75 0 0 1-.298-1.205A8.217 8.217 0 0 0 5.25 9.75V9Zm4.502 8.9a2.25 2.25 0 1 0 4.496 0 25.057 25.057 0 0 1-4.496 0Z" clipRule="evenodd" />
               </svg>
+              </div>
               : 
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="size-10 xl:size-8">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0" />
-              </svg>
+              <div className="indicator">
+                {unseenNotifCount != 0 && <span className="indicator-item badge badge-sm  bg-primary">{unseenNotifCount}</span>}   
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="size-10 xl:size-8">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0" />
+                </svg>
+              </div>
             }
 
               <p className="hidden xl:block">Notifications</p>

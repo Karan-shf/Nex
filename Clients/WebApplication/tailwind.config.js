@@ -19,7 +19,8 @@ export default {
       "cyan": "#0aa88e",
       "blue": "#0a76a8",
       "purple": "#6c0aa8",
-      "green": "#0aa869"
+      "green": "#0aa869",
+      "grayPrime": "#232B2B"
 
 
     }

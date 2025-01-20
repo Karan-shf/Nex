@@ -48,3 +48,11 @@ export interface Post{
         profilePic:string
     }
 }
+
+export interface Notifs{
+    id:number;
+    userID:number,
+    content:string,
+    isSeen:boolean,
+    createdAt:Date,
+}

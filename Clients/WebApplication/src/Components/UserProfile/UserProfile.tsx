@@ -1,10 +1,15 @@
-import { useNavigate } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom"
 import userContext, { useUserContext } from "../../contexts/UserContexts"
+import useOtherUser from "./useOtherUser";
 
 
 
 const UserProfile = () => {
-    const {user , setUser} = useUserContext()
+
+    const {id} = useParams()
+
+    const { user, setUser } = id ? useOtherUser(id) : useUserContext();
+
     const navigate = useNavigate()
     return (
         <div>

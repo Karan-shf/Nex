@@ -35,18 +35,22 @@ const SectionLayout = () => {
         
         {/* <div className="border-l h-full border-secondary"></div> */}
 
-        <div className='md:col-span-5 overflow-hidden relative sm:col-span-7 col-span-full w-full border-l h-full overflow-y-auto  border-darkGray'>
+        <div className='md:col-span-5 overflow-hidden relative sm:col-span-7 col-span-full w-full border-l h-full   border-darkGray'>
         {/* <PostAPost/> */}
-          <button onClick={() => { dialogElement?.showModal(); console.log(dialogElement) }} className='bg-primary p-3 rounded-full absolute bottom-24 right-7 sm:hidden block'>
+          <button onClick={() => { dialogElement?.showModal(); console.log(dialogElement) }} className='bg-primary p-3 rounded-full fixed bottom-24 right-7 sm:hidden block'>
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-8 block xl:hidden ">
                 <path strokeLinecap="round" strokeLinejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L6.832 19.82a4.5 4.5 0 0 1-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 0 1 1.13-1.897L16.863 4.487Zm0 0L19.5 7.125" />
               </svg>
           </button>
           <TopBarContext.Provider value={{ title, setTitle, hasBackward, setHasBackward }}>
-            <div className='border border-darkGray fixed top-0 h-14  bg-backdropDark backdrop-blur-md w-full'>
-              <TopBar/>
-            </div>
-            <div className='mb-14'></div>
+            {title != "Explore" &&
+              <>
+                <div className='border border-darkGray fixed top-0 h-14  bg-backdropDark backdrop-blur-md w-full'>
+                  <TopBar/>
+                </div>
+                <div className='mb-14'></div>
+              </>
+            }
             <ToastContainer aria-label={"sth"} />
             <Outlet />
           </TopBarContext.Provider>

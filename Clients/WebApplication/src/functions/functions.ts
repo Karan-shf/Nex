@@ -48,6 +48,13 @@ export function Symbolize(count: number) {
 
 }
 
+
+export function FindMentions(text: string): { mentions: string[], parts: string[], regex: RegExp } {
+    const regex = /@\w+/g;
+    const matches = text.match(regex);
+    return { mentions: matches || [], parts: text.split(/(\s+)/), regex: regex };
+}
+
 export function formatPostsDate(date: Date | string): string {
     // Ensure the input is a Date object
     const parsedDate = typeof date === 'string' ? new Date(date) : date;

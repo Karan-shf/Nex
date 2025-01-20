@@ -8,7 +8,11 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { APILink } from "../consts/consts";
 import { useParams } from "react-router-dom";
 
-const PostAComment = () => {
+interface typess{
+    type?: "Post"|"Quote"|"Comment" 
+}
+
+const PostAComment = ({type = "Post"}:typess) => {
     const { user } = useUserContext();
     const [content, setContent] = useState("");
     const {id} = useParams()
@@ -93,6 +97,8 @@ const PostAComment = () => {
             // queryClient.invalidateQueries({ queryKey: ["bots"] });
             if (id){
                 queryClient.invalidateQueries({ queryKey: ["comments" , Number(id)] });
+            }else{
+                queryClient.invalidateQueries({ queryKey: ["feeds"] });
             }
             setFile(null)
             setContent("")
@@ -130,12 +136,18 @@ const PostAComment = () => {
         });
     };
 
+    useEffect(()=>{
+        setFile(null)
+        setContent("")
+    },[])
+
     return (
-        <div className="w-full p-5">
-            <div className=" overflow-auto ">
+        <div className="w-full p-5 ">
+            <div className=" overflow-auto max-h-80">
                 <div className="flex">
+                {/* <button onClick={()=>{console.log(mediaPreview,file , type)}}>Tessssssssssssst</button> */}
                 <img className="max-w-12 max-h-12 rounded-full "src={user?.profilePic ? GetMediaLink(user.profilePic) : defaultUser} alt="User" />
-                <div className="pl-5 w-full h-64">
+                <div className={`pl-5 w-full  ${(type=="Comment" && !file) ? "h-64" : "h-fit"}`}>
                     <textarea
                     ref={textareaRef}
                     cols={10}
@@ -144,7 +156,7 @@ const PostAComment = () => {
                     value={content}
                     placeholder="Feed This Nexus..."
                     onChange={handleInputChange}
-                    className="resize-none w-full h-fit bg-base-100 focus:outline-none focus:border-none overflow-hidden"
+                    className="resize-none text-lg w-full h-fit bg-base-100 focus:outline-none focus:border-none overflow-hidden"
                     style={{ overflow: "hidden" }} // Hide the scrollbar
                     ></textarea>
                     <div
@@ -190,7 +202,7 @@ const PostAComment = () => {
             <hr className="w-full text-secondary"></hr>
             <div className="flex justify-between mt-3">
             <div className="flex gap-2">
-                <label htmlFor="mediaPicker2">
+                <label htmlFor={"mediaPicker" + type}>
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
@@ -206,7 +218,7 @@ const PostAComment = () => {
                     />
                 </svg>
                 <input
-                    id="mediaPicker2"
+                    id={"mediaPicker" + type}
                     type="file"
                     accept="image/*,video/*"
                     className="hidden"
