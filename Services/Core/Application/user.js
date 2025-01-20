@@ -4,6 +4,8 @@ import { notifCreate } from "../Infrastructure/notif.js";
 
 export async function getUserProfilebyID(req,res) {
 
+    if (!req.params.id) req.params.id = req.user.id;
+
     const { error } = objectIDValidate({id:req.params.id});
     if (error) return res.status(400).json({ "error": error.details });
     

@@ -52,7 +52,7 @@ export async function getUserFollowers(req,res) {
 
     const followerCards = [];
 
-    rabbitMQresponses.users.forEach(user => followerCards.push(_.pick(user,["id","name","profilePic","username","aboutUser"])));
+    rabbitMQresponses.users.forEach(user => followerCards.push(_.pick(user,["id","name","profilePic","username","aboutUser","verificationState"])));
 
     const moreFollowers = await followingReadInf({followingID:req.user.id} , 1, req.query.offset+req.query.limit);
     const hasMore = moreFollowers.length == 0 ? false:true;
