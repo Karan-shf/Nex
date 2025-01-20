@@ -46,8 +46,8 @@ export async function createPost(req, res) {
 
     let post = await postCreate(reqData);
 
-    extractPostTags(post.content, post.id);
-    extractPostMentions(post.content, post.id, req.user.username);
+    await extractPostTags(post.content, post.id);
+    await extractPostMentions(post.content, post.id, req.user.username);
 
     if (req.file) {
 
