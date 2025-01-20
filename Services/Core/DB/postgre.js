@@ -14,7 +14,7 @@ export async function db() {
     .then(() => logger.info('Connection to postgreSQL established successfully.'))
     .catch((err) => logger.error('Unable to connect to the postgre database', err))
     
-    sequelize.sync({ alter:true }).then(() => logger.info('All models were synchronized successfully.'));
+    sequelize.sync({ alter:true }).then(() => logger.info('All models synchronized successfully.'));
 }
 
 process.on('SIGINT', async () => {
