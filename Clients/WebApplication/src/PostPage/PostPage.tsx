@@ -28,7 +28,7 @@ const PostPage = () => {
         {!isLoading ?
             <div>
                 <PostViewer main={true} post={post}/>
-                <PostAComment/>
+                <PostAComment type={"Comment"}/>
                 <InfiniteScroll
                     dataLength={totalFetchedPosts} // This is the length of the posts array
                     next={fetchNextPage} // Function to fetch more data

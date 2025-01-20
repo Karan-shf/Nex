@@ -10,6 +10,7 @@ import Saves from "./Components/Saves/Saves"
 import Notifications from "./Components/Notification/Notifications"
 import Home from "./Components/Home/Home"
 import PostPage from "./PostPage/PostPage"
+import SearchResult from "./Components/SearchResult/SearchResult"
 
 
 
@@ -24,12 +25,15 @@ const router = createBrowserRouter([
                         {path:'adminProfile',element: <AdminProfile/>},
 
                         {path:'explore',element: <Explore/>},
+                        {path:'explore/searchResult',element: <SearchResult/>},
                         {path:'saves',element: <Saves/>},
                         {path:'notifications',element: <Notifications/>},
 
                         {path:"/" , element: <Home/>},
 
-                        {path:"/:id" , element: <PostPage/>}
+                        {path:"/:id" , element: <PostPage/>},
+                        {path:"/userProfile/:userID" , element: <UserProfile/>}
+
 
         
                 ]}
