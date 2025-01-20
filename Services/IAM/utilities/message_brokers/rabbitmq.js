@@ -14,7 +14,7 @@ export default async function setupRabbitMQ() {
 
         const queue = "token_validation";
         const userQueue = "user_validation";
-        const entFetchQueue = "entity_fetch"
+        const entFetchQueue = "entity_fetch";
 
         await channel.assertQueue(queue, { durable: false });
         await channel.assertQueue(userQueue, { durable: false });
@@ -50,13 +50,23 @@ export default async function setupRabbitMQ() {
 
         channel.consume(userQueue, async (message) => {
 
-            const { userID } = JSON.parse(message.content.toString());
+            const { userInfo, type } = JSON.parse(message.content.toString());
             let response = { user: null };
 
             try {
-                const user = await userReadByID(userID);
-                if (user) {
-                    response.user = user;
+                if (type == "id") {
+                    const user = await userReadByID(userInfo);
+                    if (user) {
+                        response.user = user;
+                    }
+                } else if (type == "username") {
+                    const users = await userRead({username:userInfo});
+                    const user = users[0];
+                    if (user) {
+                        response.user = user;
+                    }
+                } else {
+                    response.error = "invalid type";
                 }
             } catch (error) {
                 response.error = "error while fetching user from databsae";

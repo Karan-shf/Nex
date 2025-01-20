@@ -13,6 +13,8 @@ import { Op } from "sequelize";
 // import findPostAuthor from "./postAuthor.js"
 import { notifCreate } from "../Infrastructure/notif.js";
 import validateSearchPost from "../Contracts/searchPost.js"
+import objectIDValidate from "../Contracts/objectID.js";
+import { extractPostMentions } from "./user.js";
 
 export async function createPost(req, res) {
 
@@ -45,6 +47,7 @@ export async function createPost(req, res) {
     let post = await postCreate(reqData);
 
     extractPostTags(post.content, post.id);
+    extractPostMentions(post.content, post.id, req.user.username);
 
     if (req.file) {
 
@@ -77,6 +80,9 @@ export async function createPost(req, res) {
 
 export async function getPost(req, res) {
 
+    const { error } = objectIDValidate({id:req.params.id});
+    if (error) return res.status(400).json({ "error": error.details });
+
     let post = await postReadByPK(req.params.id);
     if (!post) return res.status(404).json({"error":"post not found"})
 
@@ -94,7 +100,7 @@ export async function getPost(req, res) {
     const postBookmark = await postBookmarkRead({userID:req.user.id, postID: post.id});
     post.isBookmarked = postBookmark.length == 0 ? false:true;
 
-    const response = await sendUserValidationRequest(post.userID);
+    const response = await sendUserValidationRequest(post.userID, "id");
     if (response.error) return res.status(500).json({"error": response.error});
     if (!response.user) return res.status(500).json({"error": `userID(${post.userID}) in post with id ${post.id} is incorrect`});
 
@@ -170,6 +176,9 @@ export async function getPostInFeed(req, res, next) {
 
 export async function getPostComments(req,res,next) {
 
+    const { error } = objectIDValidate({id:req.query.id});
+    if (error) return res.status(400).json({ "error": error.details });
+
     req.condition = {
         postType: "Comment",
         repliesTo: req.query.id
@@ -221,12 +230,20 @@ export async function searchPost(req,res,next) {
     // let searchCondition;
 
     if (req.query.userID) {
+        const { error } = objectIDValidate({id:req.query.userID});
+        if (error) return res.status(400).json({ "error": error.details });
         req.condition = {userID: req.query.userID}
     } else {
-        req.condition = { 
-            postDate: { [Op.between]: [req.query.startDate, req.query.endDate] },
-            content: { [Op.iLike]: `%${req.query.content}%` }
-        };
+        if (!req.query.startDate || !req.query.endDate) {
+            req.condition = { 
+                content: { [Op.iLike]: `%${req.query.content}%` }
+            };
+        } else {
+            req.condition = { 
+                postDate: { [Op.between]: [req.query.startDate, req.query.endDate] },
+                content: { [Op.iLike]: `%${req.query.content}%` }
+            };
+        }
     }
 
     next();

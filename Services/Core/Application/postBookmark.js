@@ -5,7 +5,7 @@ import { Op } from "sequelize";
 
 export async function toggleBookmark(req, res) {
 
-    const { error } = objectIDValidate(req.body);
+    const { error } = objectIDValidate({id:req.body.postID});
     if (error) return res.status(400).json({ "error": error.details });
 
     let post = await postReadByPK(req.body.postID);

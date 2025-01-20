@@ -11,7 +11,7 @@ export async function reportUser(req, res) {
 
     if (req.user.id==req.body.reportedID) return res.status(400).json({"error": "you can't report yourself"});
     
-    const response = await sendUserValidationRequest(req.body.reportedID);
+    const response = await sendUserValidationRequest(req.body.reportedID, "id");
     if (response.error) return res.status(500).json({"error": response.error});
     if (!response.user) return res.status(400).json({"error": "invalid report id. user with the given id does not exist"});
 
