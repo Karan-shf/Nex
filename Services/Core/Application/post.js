@@ -84,7 +84,7 @@ export async function getPost(req, res) {
     if (error) return res.status(400).json({ "error": error.details });
 
     let post = await postReadByPK(req.params.id);
-    if (!post) return res.status(404).json({"error":"post not found"})
+    if (!post || post.is_banned) return res.status(404).json({"error":"post not found"})
 
     post.views++;
     await postViewsCreate({userID: req.user.id, postID: post.id});

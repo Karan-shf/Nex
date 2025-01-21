@@ -92,6 +92,8 @@ export async function userLogin(req,res) {
     
     const validPassword = await bcrypt.compare(req.body.password, user.password);
     if (!validPassword) return res.status(400).json({"error": "invalid email or password"});
+
+    if (user.isBanned) return res.status(403).json({error:"unfortunately You Were Banned From the Platform :("});
     
     const token = createJwtToken(user.id, false);
     
@@ -154,6 +156,16 @@ export async function sendVerificationEmail(req,res) {
     const otp = await otpCreate(req.body.email, confirmationCode);
 
     return res.json({"otp": otp});
+}
+
+export async function getIdFromUsername(req,res) {
+    
+    const users = await userRead({username: req.params.username});
+    const user = users[0];
+
+    if (!user) return res.status(404).json({error:"user not found"});
+
+    return res.status(200).json(user.id);
 }
 
 // export async function checkVerificationEmail(req,res) {

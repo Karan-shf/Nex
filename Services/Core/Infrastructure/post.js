@@ -4,12 +4,12 @@ export async function postCreate(post) {
     return await Post.create(post);
 }
 
-export async function postRead(condition,limit,offset) {
+export async function postRead(condition,limit,offset,order) {
     return await Post.findAll({ 
         where: condition, 
         limit: limit,
         offset: offset,
-        order: [['postDate', 'DESC']]
+        order: [[order, 'DESC']]
     });
 }
 

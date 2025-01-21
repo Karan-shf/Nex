@@ -6,6 +6,7 @@ import followings from "./routes/following.js";
 import notifs from "./routes/notif.js"
 import user from "./routes/user.js";
 import tags from "./routes/tags.js";
+import admin from "./routes/admin.js";
 import error from "../middlewares/error.js";
 import cors from "../middlewares/cors.js";
 import logger from "../utilities/loggers/generalLogger.js";
@@ -32,6 +33,7 @@ export default function(app) {
     app.use("/notif", notifs);
     app.use("/user", user);
     app.use("/tag", tags);
+    app.use("/admin", admin);
 
     app.use(error);
 }

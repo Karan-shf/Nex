@@ -16,3 +16,7 @@ export async function followingReadInf(condition,limit,offset) {
         order: [['createdAt', 'DESC']]
     });
 }
+
+export async function followingCount(condition) {
+    return await Following.count({ where:condition });
+}
