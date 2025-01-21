@@ -15,10 +15,12 @@ export default async function setupRabbitMQ() {
         const queue = "token_validation";
         const userQueue = "user_validation";
         const entFetchQueue = "entity_fetch";
+        const banUserQueue = "user_ban";
 
         await channel.assertQueue(queue, { durable: false });
         await channel.assertQueue(userQueue, { durable: false });
         await channel.assertQueue(entFetchQueue, { durable: false });
+        await channel.assertQueue(banUserQueue, { durable: false });
 
         channel.consume(queue, async (message) => {
             const { token } = JSON.parse(message.content.toString());
@@ -100,6 +102,33 @@ export default async function setupRabbitMQ() {
                 }
             } catch (error) {
                 response.error = "error while fetching entity from database";
+            }
+
+            channel.sendToQueue(
+                message.properties.replyTo,
+                Buffer.from(JSON.stringify(response)),
+                { correlationId: message.properties.correlationId }
+            );
+
+            channel.ack(message);
+        });
+
+        channel.consume(banUserQueue, async (message) => {
+
+            const { userID } = JSON.parse(message.content.toString());
+            let response = { success: false };
+
+            try {
+                const user = await userReadByID(userID);
+                if (user) {
+                    user.isBanned = true;
+                    await user.save();
+                    response.success = true;
+                } else {
+                    response.error = "invalid userID. user not found";
+                }
+            } catch (error) {
+                response.error = "error while fetching user from databsae";
             }
 
             channel.sendToQueue(

@@ -1,6 +1,7 @@
 import { sendUserValidationRequest } from "../utilities/message_brokers/rabbitmq.js";
 import objectIDValidate from "../Contracts/objectID.js";
 import { notifCreate } from "../Infrastructure/notif.js";
+import { followingCount, followingRead } from "../Infrastructure/following.js";
 
 export async function getUserProfilebyID(req,res) {
 
@@ -13,6 +14,14 @@ export async function getUserProfilebyID(req,res) {
     if (response.error) return res.status(500).json({"error": response.error});
     if (!response.user) return res.status(404).json({"error": "invalid user id. user with the given id does not exist"});
 
+    let user = response.user;
+
+    user.followingCount = await followingCount({followerID:user.id});
+    user.followerCount = await followingCount({followingID:user.id});
+
+    const follow = await followingRead({followerID:req.user.id, followingID:user.id});
+    user.isFollowed = follow.length==0? false:true;
+
     return res.status(200).json(response.user);
 }
 
@@ -21,6 +30,14 @@ export async function getUserProfileByUsername(req,res) {
     const response = await sendUserValidationRequest(req.params.username, "username");
     if (response.error) return res.status(500).json({"error": response.error});
     if (!response.user) return res.status(404).json({"error": "invalid username. user with the given username does not exist"});
+
+    let user = response.user;
+
+    user.followingCount = await followingCount({followerID:user.id});
+    user.followerCount = await followingCount({followingID:user.id});
+
+    const follow = await followingRead({followerID:req.user.id, followingID:user.id});
+    user.isFollowed = follow.length==0? false:true;
 
     return res.status(200).json(response.user);
 }

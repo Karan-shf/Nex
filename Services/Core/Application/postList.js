@@ -16,8 +16,10 @@ export default async function postList(req, res) {
     const postBookmarks = await postBookmarkRead({userID:req.user.id});
     let userBookmarks = [];
     postBookmarks.forEach(postBookmark => userBookmarks.push(postBookmark.postID));
+
+    req.condition.is_banned = false;
     
-    const posts = await postRead(req.condition , req.query.limit, req.query.offset);
+    const posts = await postRead(req.condition , req.query.limit, req.query.offset, "postDate");
 
     let userIDs = [];
     posts.forEach(post => userIDs.push(post.userID));
@@ -54,7 +56,7 @@ export default async function postList(req, res) {
         responses.push(response);
     });
 
-    const morePosts = await postRead(req.condition , 1, req.query.offset+req.query.limit);
+    const morePosts = await postRead(req.condition , 1, req.query.offset+req.query.limit, "postDate");
     const hasMore = morePosts.length == 0 ? false:true;
 
     return res.status(200).json({

@@ -1,4 +1,4 @@
-import { postReportCreate, postReportRead } from "../Infrastructure/postReport.js"
+import { postReportCreate } from "../Infrastructure/postReport.js"
 import { postReadByPK } from "../Infrastructure/post.js";
 import reportValidate from "../Contracts/report.js";
 import { notifCreate } from "../Infrastructure/notif.js";

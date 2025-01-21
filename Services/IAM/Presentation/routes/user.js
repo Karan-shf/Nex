@@ -1,6 +1,6 @@
 import { Router } from "express";
 import {Auth} from "../../middlewares/auth.js";
-import { userRegister, userLogin, me, checkEmail, checkUsername, sendVerificationEmail } from "../../Application/user.js";
+import { userRegister, userLogin, me, checkEmail, checkUsername, sendVerificationEmail, getIdFromUsername } from "../../Application/user.js";
 import uploader from "../../middlewares/uploader.js";
 
 const router = Router();
@@ -14,7 +14,9 @@ router.post("/check/email", checkEmail);
 router.post("/check/username", checkUsername);
 
 router.get("/me",Auth, me);
-// router.get("/me",Auth, me);
+
+router.get("/idFromUsername/:username", Auth, getIdFromUsername);
+
 router.get("/test", (req,res) => {
     return res.status(200).json({"message":"hello"});
 });
