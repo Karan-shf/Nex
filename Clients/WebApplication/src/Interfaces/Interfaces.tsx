@@ -12,13 +12,23 @@ export interface User{
     username:string,
     signDate:Date,
     aboutUser:string,
-    verficationState: "notVerified"|"pendingVerfication"|"verified",
+    verificationState: "notVerified"|"pendingVerfication"|"verified",
     isBanned:boolean
-    backgroundPic?:string
+    backGroundPic?:string
     isFollowed?:boolean
     followerCount?:number
     followingCount?:number
 
+}
+
+
+export interface FollowStat{
+    id : number
+    name :string
+    profilePic : string
+    username : string
+    aboutUser : string
+    verificationState : "notVerified"|"pendingVerfication"|"verified",
 }
 
 export interface UserSignupInterface {
@@ -51,6 +61,7 @@ export interface Post{
         username:string
         userID:number 
         profilePic:string
+        verificationState: "notVerified"|"pendingVerfication"|"verified",
     }
 }
 

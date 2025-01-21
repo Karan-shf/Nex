@@ -1,4 +1,4 @@
-import { useNavigate, useParams } from "react-router-dom"
+import { Link, useNavigate, useParams } from "react-router-dom"
 import userContext, { useUserContext } from "../../contexts/UserContexts"
 import useOtherUser from "./useOtherUser";
 import React, { useEffect, useState } from "react";
@@ -13,6 +13,8 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import FollowButton from "./FollowButton";
 import ReportUser from "./ReportUser";
 import ModalButton from "../ModalButton/ModalButton";
+import badge from '../../assets/images/badge.png'
+import EditProfile from "./EditProfile";
 
 
 
@@ -41,13 +43,14 @@ const UserProfile = () => {
             setHasBackward(false)
             setTitle("Your" + " Profile")  
         }
-    },[])
+    },[user])
 
     
     return (
         <div>
         {!isLoading  ?
             <div >
+                {/* {JSON.stringify(user)} */}
                 <InfiniteScroll
                     className="overflow-hidden"
                     height={600}
@@ -62,18 +65,18 @@ const UserProfile = () => {
                     }
                 >
                 {/* { JSON.stringify(data?.id + "hiiiiiiiii")} */}
-                <img className=" h-52 w-full" src={user?.backgroundPic ? GetMediaLink(user?.backgroundPic) : defaultBackPic }></img>
+                <img className=" h-52 w-full object-cover" src={user?.backGroundPic ? GetMediaLink(user?.backGroundPic) : defaultBackPic }></img>
                 <div className="absolute w-full top-44 ">
                     <div className="ml-8 flex justify-between items-center">
                         <div className="">
                             <img className="w-36 h-36 border-base-100 border-2 rounded-full" src={user?.profilePic ? GetMediaLink(user?.profilePic)  : defaultUser }></img>
                             <div>
-                                <p className="text-2xl font-semibold mt-2">{user?.name}</p>
+                                <p className="text-2xl font-semibold mt-2">{user?.name} <img className={`${(user?.verificationState =="verified") ? "inline" : "hidden"} w-5`} src={badge}/></p>
                                 <p className="text-lg text-secondary">@{user?.username}</p>
                                 <p className="text-lg mt-3">{user?.aboutUser}</p>
                                 <div className="flex items-center gap-5 text-md mt-2">
-                                    <p className="text-secondary"><span className="text-white font-semibold">{Symbolize(user?.followingCount??0)}</span> Following</p>
-                                    <p className="text-secondary"><span className="text-white font-semibold">{Symbolize((user?.followerCount ?? 0) + followerAdjuster )}</span> Follower</p>
+                                    <Link to={`/followStat/${user?.id}/?followers=false`} className="text-secondary"><span className="text-white font-semibold">{Symbolize(user?.followingCount??0)}</span> Following</Link>
+                                    <Link to={`/followStat/${user?.id}/?followers=true`} className="text-secondary"><span className="text-white font-semibold">{Symbolize((user?.followerCount ?? 0) + followerAdjuster )}</span> Follower</Link>
                                     
                                     
                                 </div>
@@ -87,7 +90,7 @@ const UserProfile = () => {
                                     :
                                     <>
                                     <ModalButton title="Edit Profile" id="editProfile" additionalCss="rounded-full px-5 py-1 border border-grayDark text-white" />
- 
+                                    <EditProfile/>
                                     </>}
                         </div>
 

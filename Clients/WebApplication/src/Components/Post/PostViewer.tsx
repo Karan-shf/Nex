@@ -4,6 +4,8 @@ import { Post } from "../../Interfaces/Interfaces"
 import { Link } from "react-router-dom"
 import { formatPostDateTime, formatPostsDate, GetMediaLink } from "../../functions/functions"
 import ReportForm from "../UserProfile/ReportForm"
+import ReportPost from "./ReportPost"
+import badge from "../../assets/images/badge.png"
  
 
 interface PostViewerProps{
@@ -20,17 +22,19 @@ const PostViewer = ({ post , main=false }: PostViewerProps) => {
                   <img className="max-w-12 max-h-12 rounded-full" src={post?.author?.profilePic ? GetMediaLink(post.author.profilePic) : defaultUser}></img>
                   <div className="w-full overflow-hidden">
                     <Link to={`/userProfile/${post?.author.userID}`}>
-                      <h3 className={`${!main && "inline"} mx-1`}>{post?.author.name}</h3>
-                      <h3 className={`text-secondary ${!main && "inline"} mx-1`}>@{post?.author.username}</h3>
+                      <h3 className={`${!main && "inline"} mx-1`}>{post?.author.name} <img className={`${(main && post?.author.verificationState=="verified") ? "inline" : "hidden"} w-4`} src={badge}/></h3>
+                      <h3 className={`text-secondary ${!main && "inline"} mx-1`}>@{post?.author.username} <img className={`${(!main && post?.author.verificationState=="verified") ? "inline" : "hidden"} w-4`} src={badge}/></h3>
                       <h3 className={`text-secondary ${main ? "hidden" : "inline"} mx-1`}>●</h3>
                       <h3 className={`text-secondary  ${main ? "hidden" : "inline"} mx-1`}>{formatPostsDate(post?.postDate ?? '')}</h3>
                     </Link>
-                    <button className="absolute top-3 right-6 text-secondary">
+                    {/* <button className="absolute top-3 right-6 text-secondary">
                       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="size-6">
                         <path fillRule="evenodd" d="M10.5 6a1.5 1.5 0 1 1 3 0 1.5 1.5 0 0 1-3 0Zm0 6a1.5 1.5 0 1 1 3 0 1.5 1.5 0 0 1-3 0Zm0 6a1.5 1.5 0 1 1 3 0 1.5 1.5 0 0 1-3 0Z" clipRule="evenodd" />
                       </svg>
-                    </button>
-                         <ReportForm reportedID={String(post?.id)} />
+                    </button> */}
+                         {/* <ReportForm reportedID={String(post?.id)} /> */}
+                         <ReportPost postID={post?.id??0} />
+
                     <Link to={`/${post?.id}`} className="w-full ">
                       {post?.mediaFileName && post?.mediaType == "image" && <img className="rounded-lg my-4" src={GetMediaLink(post.mediaFileName)} />}
                       {post?.mediaFileName && post?.mediaType=="video" && <video controls className="rounded-lg my-4" src={GetMediaLink(post.mediaFileName)} />}

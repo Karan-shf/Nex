@@ -9,7 +9,7 @@ interface Props {
   isUser?: boolean
 }
 
-const ReportForm = ({ reportedID , isUser }: Props) => {
+const ReportForm = ({ reportedID , isUser=true }: Props) => {
   const [reportType, setReportType] = useState<string>("");
   const [furtherExplanation, setFurtherExplanation] = useState<string>("");
   const dialogRef = useRef<HTMLDialogElement>(null);
@@ -54,7 +54,7 @@ const ReportForm = ({ reportedID , isUser }: Props) => {
             // setSubmitLoading(false);
 
             
-            closeModalWithId("userReport")
+            closeModalWithId("reportUser")
 
         },
         onError: (error) =>{

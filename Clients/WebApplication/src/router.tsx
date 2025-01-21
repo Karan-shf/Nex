@@ -11,6 +11,7 @@ import Notifications from "./Components/Notification/Notifications"
 import Home from "./Components/Home/Home"
 import PostPage from "./PostPage/PostPage"
 import SearchResult from "./Components/SearchResult/SearchResult"
+import FollowStat from "./Components/FollowStat/FollowStat"
 
 
 
@@ -32,7 +33,10 @@ const router = createBrowserRouter([
                         {path:"/" , element: <Home/>},
 
                         {path:"/:id" , element: <PostPage/>},
-                        {path:"/userProfile/:userID" , element: <UserProfile/>}
+                        {path:"/userProfile/:userID" , element: <UserProfile/>},
+
+                        {path:"/followStat/:userID" , element: <FollowStat/>}
+
 
 
         
