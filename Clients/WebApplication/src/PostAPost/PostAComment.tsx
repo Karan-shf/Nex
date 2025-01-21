@@ -100,6 +100,7 @@ const PostAComment = ({type = "Post"}:typess) => {
             }else{
                 queryClient.invalidateQueries({ queryKey: ["feeds"] });
             }
+            queryClient.invalidateQueries({queryKey:['topTrends']})
             setFile(null)
             setContent("")
             toast.success("Welcome!")

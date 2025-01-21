@@ -7,6 +7,7 @@ import { closeModal, closeModalWithId, GetMediaLink } from "../functions/functio
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { APILink } from "../consts/consts";
 import PostAComment from "./PostAComment";
+import _ from "lodash";
 
 const PostAPost = () => {
   const dialogRef = useRef<HTMLDialogElement>(null);

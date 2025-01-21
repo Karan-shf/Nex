@@ -6,7 +6,7 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 
 interface Props {
     limit: number,
-    userID: number
+    userID: string
 }
 
 function useUserPosts({ limit , userID }: Props) {
@@ -26,7 +26,7 @@ function useUserPosts({ limit , userID }: Props) {
 
             if (result.ok) {
                 return {
-                    posts: jsonResult.data as User,
+                    posts: jsonResult.data as Post[],
                     hasMore: jsonResult.hasMore as boolean
                 };
             } else {

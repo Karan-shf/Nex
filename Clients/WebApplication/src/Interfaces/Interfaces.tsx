@@ -14,7 +14,11 @@ export interface User{
     aboutUser:string,
     verficationState: "notVerified"|"pendingVerfication"|"verified",
     isBanned:boolean
-    backgroundPic:string
+    backgroundPic?:string
+    isFollowed?:boolean
+    followerCount?:number
+    followingCount?:number
+
 }
 
 export interface UserSignupInterface {
@@ -50,6 +54,11 @@ export interface Post{
     }
 }
 
+export interface HashTag{
+    Tag:{tag:string}
+    count:number
+}
+
 export interface Notifs{
     id:number;
     userID:number,
@@ -57,3 +66,14 @@ export interface Notifs{
     isSeen:boolean,
     createdAt:Date,
 }
+
+export interface Report{
+    id:number, 
+    reportedID:number
+    userID:number
+    reportType: "Hate Speech" | "Harassment" | "Violent Speech" | "Child Safty" | "Privacy" | "Spam"
+    furtherExplanations?:string
+    reportState: "Pending"|"Accepted"|"Ignored"
+    createdAt:Date
+}
+
