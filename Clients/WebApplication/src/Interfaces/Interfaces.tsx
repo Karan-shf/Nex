@@ -14,6 +14,7 @@ export interface User{
     aboutUser:string,
     verficationState: "notVerified"|"pendingVerfication"|"verified",
     isBanned:boolean
+    backgroundPic:string
 }
 
 export interface UserSignupInterface {
