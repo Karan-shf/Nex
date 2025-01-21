@@ -37,9 +37,6 @@
           },
           "404": {
             "description": "Not Found"
-          },
-          "500": {
-            "description": "Internal Server Error"
           }
         }
       }
@@ -164,6 +161,26 @@
             "required": true,
             "type": "string"
           },
+          {
+            "name": "x-auth-token",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/user/editProfile": {
+      "put": {
+        "description": "",
+        "parameters": [
           {
             "name": "x-auth-token",
             "in": "header",
