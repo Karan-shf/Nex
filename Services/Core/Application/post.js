@@ -24,7 +24,7 @@ export async function createPost(req, res) {
     if (error) return res.status(400).json({"error": error.details});
     if (reqData.quotedFrom && reqData.repliesTo) return res.status(400).json({"error": "post can not have both quote and reply params"});
 
-    if (req.file && !fileValidate(req.file, ["image", "video"])) return res.status(400).json({ "error": "file media type is not corerect" });
+    if (req.file && !fileValidate(req.file, ["image", "video"])) return res.status(400).json({ "error": "file media type is not correct" });
 
     reqData.userID = req.user.id;
     reqData.postDate = Date.now();

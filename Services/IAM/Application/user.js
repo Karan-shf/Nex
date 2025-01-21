@@ -1,5 +1,5 @@
 import createJwtToken from "./token.js";
-import { userCreate, userRead } from "../Infrastructure/user.js";
+import { userCreate, userRead, userReadByID } from "../Infrastructure/user.js";
 import _ from "lodash";
 import bcrypt from "bcrypt";
 import registerValidate from "../Contracts/register.js";
@@ -10,7 +10,10 @@ import crypto from "crypto";
 import sendMail from "./nodeMailer.js";
 import { otpCreate, otpDelete, otpRead } from "../Infrastructure/otp.js";
 import logger from "../utilities/loggers/generalLogger.js";
-import grpcClient from "../utilities/message_brokers/grpc.js";
+// import grpcClient from "../utilities/message_brokers/grpc.js";
+import uploadFileGrpc from "../utilities/message_brokers/grpc.js";
+import fileValidate from "../Contracts/file.js";
+import editProfileValidate from "../Contracts/editProfile.js";
 
 
 export async function userRegister(req,res) {
@@ -49,6 +52,8 @@ export async function userRegister(req,res) {
     const salt = await bcrypt.genSalt(10);
     reqData.password = await bcrypt.hash(reqData.password, salt);
 
+    if (req.file && !fileValidate(req.file, ["image"])) return res.status(400).json({ "error": "file media type is not correct" });
+
     user = await userCreate(reqData);
     
     const token = createJwtToken(user.id, false);
@@ -61,24 +66,30 @@ export async function userRegister(req,res) {
             originalname: req.file.originalname,
             uploadedBy: user?.id || 'anonymous',
         };
-    
-        grpcClient.UploadFile(grpcRequest, async (err, response) => {
-            if (err) {
-                logger.error('gRPC upload failed', err);
-                return res.status(500).send('Failed to upload file.');
-            }
-    
-            logger.info("File uploaded via gRPC", response);
-    
-            user.profilePic = response.filename;
-            user = await user.save();
 
-            return res.status(200).header("x-auth-token", token).json({"user": _.omit(user.toJSON(), ["password"])});
-        });
-    } else {
+        const grpcResponse = await uploadFileGrpc(grpcRequest);
 
-        return res.status(200).header("x-auth-token", token).json({"user": _.omit(user.toJSON(), ["password"])});
-    }   
+        user.profilePic = grpcResponse.filename;
+    
+        // grpcClient.UploadFile(grpcRequest, async (err, response) => {
+        //     if (err) {
+        //         logger.error('gRPC upload failed', err);
+        //         return res.status(500).send('Failed to upload file.');
+        //     }
+    
+        //     logger.info("File uploaded via gRPC", response);
+    
+        //     user.profilePic = response.filename;
+        //     user = await user.save();
+
+        //     return res.status(200).header("x-auth-token", token).json({"user": _.omit(user.toJSON(), ["password"])});
+        // });
+    }
+
+    user = await user.save();
+
+    return res.status(200).header("x-auth-token", token).json({"user": _.omit(user.toJSON(), ["password"])});
+     
 }
 
 export async function userLogin(req,res) {
@@ -168,25 +179,75 @@ export async function getIdFromUsername(req,res) {
     return res.status(200).json(user.id);
 }
 
-// export async function checkVerificationEmail(req,res) {
 
-   
+export async function editUserProfile(req,res) {
+    
+    const reqData = JSON.parse(req.body.reqData);
 
-//     let otp = await otpRead({email: req.body.email});
-//     if (!otp) return res.status(404).json({"message":"no otp found"});
+    const {error} = editProfileValidate(reqData);
+    if (error) return res.status(400).json({"error": error.details});
 
-//     otp = otp.toJSON();
+    let user = await userReadByID(req.user.id);
 
-//     if (otp.expireTime.getTime() < Date.now()) {
-//         await otpDelete({id: otp.id});
-//         return res.status(400).json({"message":"otp expire time has passed"});
-//     }
+    user.name = reqData.name;
+    user.aboutUser = reqData.aboutUser;
 
-//     if (otp.verificationCode != req.body.code) return res.status(400).json({"message":"incorrect otp code"});
+    let profilePic;
+    let backGroundPic;
 
-//     await otpDelete({id: otp.id});
+    req.files.forEach(file => {
+        if (file.fieldname=="profilePic") {
+            profilePic = file;
+        } else if (file.fieldname=="backGroundPic") {
+            backGroundPic = file;
+        }
+    });
 
-//     logger.info(`${req.body.email} verified`);
+    if (profilePic) {
 
-//     return res.json({"success": true});
-// }
+        const profilePicgrpcRequest = {
+            file: profilePic.buffer,
+            filename: profilePic.filename,
+            originalname: profilePic.originalname,
+            uploadedBy: req.user?.id || 'anonymous',
+        };
+
+        const profilePicgrpcResponse = await uploadFileGrpc(profilePicgrpcRequest);
+
+        user.profilePic = profilePicgrpcResponse.filename;
+    
+        // grpcClient.UploadFile(profilePicgrpcRequest, (err, response) => {
+        //     if (err) {
+        //         logger.error('gRPC upload failed', err);
+        //         return res.status(500).send('Failed to upload file.');
+        //     }
+    
+        //     logger.info("File uploaded via gRPC", response);
+    
+            
+        //     // user = await user.save();
+            
+
+        //     // return res.status(200).header("x-auth-token", token).json({"user": _.omit(user.toJSON(), ["password"])});
+        // })
+        console.log(1234);
+    }
+
+    if (backGroundPic) {
+
+        const backGroundPicgrpcRequest = {
+            file: backGroundPic.buffer,
+            filename: backGroundPic.filename,
+            originalname: backGroundPic.originalname,
+            uploadedBy: req.user?.id || 'anonymous',
+        };
+
+        const backGroundPicgrpcResponse = await uploadFileGrpc(backGroundPicgrpcRequest);
+
+        user.backGroundPic = backGroundPicgrpcResponse.filename;
+    }
+
+    user = await user.save();
+
+    return res.status(200).json(_.omit(user.toJSON(), ["password"]));
+}
