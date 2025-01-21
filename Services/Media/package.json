@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "node --experimental-vm-modules node_modules/.bin/jest",
     "swagger": "node ./middlewares/swagger_config.js"
   },
   "keywords": [],
@@ -26,5 +26,16 @@
     "swagger-ui-express": "^5.0.1",
     "uuid": "^11.0.5",
     "winston": "^3.17.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.26.0",
+    "@babel/preset-env": "^7.26.0",
+    "babel-jest": "^29.7.0",
+    "jest": "^29.7.0",
+    "mockingoose": "^2.16.2"
+  },
+  "jest": {
+    "transform": {},
+    "testEnvironment": "node"
   }
 }

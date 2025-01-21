@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "jest",
+    "test": "node --experimental-vm-modules node_modules/.bin/jest",
     "swagger": "node ./middlewares/swagger_config.js"
   },
   "keywords": [],
@@ -45,6 +45,7 @@
   "jest": {
     "transform": {
       "^.+\\.js$": "babel-jest"
-    }
+    },
+    "testEnvironment": "node"
   }
 }

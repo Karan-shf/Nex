@@ -47,6 +47,8 @@ export async function getUserBookmarks(req, res, next) {
     console.log(req.query.limit, req.query.offset);
 
     req.condition = {id:{[Op.in]:postIDs}};
+    req.order = "postDate";
+    req.condition.is_banned = false;
 
     next();
 }

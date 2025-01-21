@@ -120,6 +120,9 @@ export async function getPostInFeed(req, res, next) {
 
     req.condition = { postType: { [Op.in]: ["Post","Quote"] } };
 
+    req.order = "postDate";
+    req.condition.is_banned = false;
+
     next();
 
     // const postLikes = await postLikesRead({userID:req.user.id});
@@ -184,6 +187,9 @@ export async function getPostComments(req,res,next) {
         repliesTo: req.query.id
     };
 
+    req.order = "postDate";
+    req.condition.is_banned = false;
+
     next();
     
     // const comments = await postRead({
@@ -245,6 +251,9 @@ export async function searchPost(req,res,next) {
             };
         }
     }
+
+    req.order = "postDate";
+    req.condition.is_banned = false;
 
     next();
 

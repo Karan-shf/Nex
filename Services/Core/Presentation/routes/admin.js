@@ -1,10 +1,11 @@
 import { Router } from "express";
 import { adminAuth } from "../../middlewares/auth.js";
 import { getAllPosts, getPendingReports, getHistoryReports, getUserReports, getPostReports, processPostReport, processUserReport } from "../../Application/admin.js";
+import postList from "../../Application/postList.js";
 
 const router = Router();
 
-router.get("/allPosts", adminAuth, getAllPosts);
+router.get("/allPosts", adminAuth, getAllPosts, postList);
 
 router.get("/userReports/pending", adminAuth, getPendingReports, getUserReports);
 
