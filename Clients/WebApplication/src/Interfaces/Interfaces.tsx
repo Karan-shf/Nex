@@ -31,6 +31,9 @@ export interface FollowStat{
     verificationState : "notVerified"|"pendingVerfication"|"verified",
 }
 
+
+
+
 export interface UserSignupInterface {
     email?:string|undefined,
     password?:string|undefined,

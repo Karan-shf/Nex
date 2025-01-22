@@ -92,7 +92,7 @@ const PostAPost = () => {
             console.log("success");
             // queryClient.invalidateQueries({ queryKey: ["bots"] });
             queryClient.invalidateQueries({ queryKey: ["feeds"] });
-            toast.success("Welcome!")
+            toast.success("Nexus Posted")
             setIsLoading(false)
             closeModalWithId("test")
 
@@ -101,7 +101,7 @@ const PostAPost = () => {
         onError: (error) => {
             console.log("error12");
             console.log(error);
-            toast.error("Couldnt Login")
+            toast.error("Something went wrong")
             // console.log(error.message);
             // let errorText = 'error';
             // setError(error.message);

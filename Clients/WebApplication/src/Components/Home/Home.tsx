@@ -5,7 +5,7 @@ import { useTopBarContext } from "../../contexts/TopBarContext";
 import React, { useEffect } from "react";
 
 const Home = () => {
-  const {data, fetchNextPage } = useGetHomePost({limit:20});
+  const {data, fetchNextPage} = useGetHomePost({limit:20});
   const totalFetchedPosts =
   data?.pages.reduce((total, page) => total + page?.posts?.length, 0) ||
   0;
