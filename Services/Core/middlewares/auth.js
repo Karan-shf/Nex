@@ -10,7 +10,7 @@ export async function auth(req, res, next) {
 
         if (!response.isValid) return res.status(400).send(response.error);
 
-        if (response.data.admin) req.admin = response.data.admin;
+        if (response.data.admin) req.user = response.data.admin;
         if (response.data.user) req.user = response.data.user;
 
         next();

@@ -41,7 +41,7 @@ export async function toggleFollowing(req, res) {
 
 export async function getUserFollowers(req,res) {
 
-    const followers = await followingReadInf({followingID:req.user.id}, req.query.limit, req.query.offset);
+    const followers = await followingReadInf({followingID:req.query.id}, req.query.limit, req.query.offset);
 
     const followersIDs = [];
 
@@ -54,7 +54,7 @@ export async function getUserFollowers(req,res) {
 
     rabbitMQresponses.users.forEach(user => followerCards.push(_.pick(user,["id","name","profilePic","username","aboutUser","verificationState"])));
 
-    const moreFollowers = await followingReadInf({followingID:req.user.id} , 1, req.query.offset+req.query.limit);
+    const moreFollowers = await followingReadInf({followingID:req.query.id} , 1, req.query.offset+req.query.limit);
     const hasMore = moreFollowers.length == 0 ? false:true;
 
     return res.status(200).json({
@@ -65,7 +65,7 @@ export async function getUserFollowers(req,res) {
 
 export async function getUserFollowings(req,res) {
 
-    const followings = await followingReadInf({followerID:req.user.id}, req.query.limit, req.query.offset);
+    const followings = await followingReadInf({followerID:req.query.id}, req.query.limit, req.query.offset);
 
     const followingsIDs = [];
 
@@ -78,7 +78,7 @@ export async function getUserFollowings(req,res) {
 
     rabbitMQresponses.users.forEach(user => followingCards.push(_.pick(user,["id","name","profilePic","username","aboutUser"])));
 
-    const moreFollowings = await followingReadInf({followerID:req.user.id} , 1, req.query.offset+req.query.limit);
+    const moreFollowings = await followingReadInf({followerID:req.query.id} , 1, req.query.offset+req.query.limit);
     const hasMore = moreFollowings.length == 0 ? false:true;
 
     return res.status(200).json({

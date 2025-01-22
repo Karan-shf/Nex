@@ -6,20 +6,28 @@ import processReportValidate from "../Contracts/processReport.js";
 import { sendBanUserRequest } from "../utilities/message_brokers/rabbitmq.js";
 import { Op } from "sequelize";
 
-export async function getAllPosts(req,res) {
+export async function getAllPosts(req,res,next) {
+    // console.log(req.user);
+    
     const validOrderTypes = ["postDate","views","likes"];
     
     if (!validOrderTypes.includes(req.query.order)) return res.status(400).json({error:"invalid order type",validOrderType:validOrderTypes});
     
-    const Posts = await postRead({}, req.query.limit, req.query.offset,req.query.order);
+    // const Posts = await postRead({}, req.query.limit, req.query.offset,req.query.order);
 
-    const MorePosts = await postRead({}, 1, req.query.offset+req.query.limit,req.query.order);
-    const hasMore = MorePosts.length==0? false:true;
+    // const MorePosts = await postRead({}, 1, req.query.offset+req.query.limit,req.query.order);
+    // const hasMore = MorePosts.length==0? false:true;
 
-    return res.status(200).json({
-        hasMore:hasMore,
-        data: Posts
-    });
+    // return res.status(200).json({
+    //     hasMore:hasMore,
+    //     data: Posts
+    // });
+
+    req.order = req.query.order;
+    req.condition = {};
+    req.user = req.admin;
+
+    next();
 }
 
 export async function getUserReports(req,res) {

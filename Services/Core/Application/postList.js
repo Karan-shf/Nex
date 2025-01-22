@@ -9,6 +9,9 @@ export default async function postList(req, res) {
 
     // version 1.0 => recomands recently uploaded posts
 
+    // console.log(req.user);
+    
+
     const postLikes = await postLikesRead({userID:req.user.id});
     let userLikes = [];
     postLikes.forEach(postLike => userLikes.push(postLike.postID));
@@ -19,7 +22,8 @@ export default async function postList(req, res) {
 
     req.condition.is_banned = false;
     
-    const posts = await postRead(req.condition , req.query.limit, req.query.offset, "postDate");
+    // const posts = await postRead(req.condition , req.query.limit, req.query.offset, "postDate");
+    const posts = await postRead(req.condition , req.query.limit, req.query.offset, req.order);
 
     let userIDs = [];
     posts.forEach(post => userIDs.push(post.userID));
@@ -56,7 +60,7 @@ export default async function postList(req, res) {
         responses.push(response);
     });
 
-    const morePosts = await postRead(req.condition , 1, req.query.offset+req.query.limit, "postDate");
+    const morePosts = await postRead(req.condition , 1, req.query.offset+req.query.limit, req.order);
     const hasMore = morePosts.length == 0 ? false:true;
 
     return res.status(200).json({
